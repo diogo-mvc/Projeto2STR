@@ -13,7 +13,7 @@
 #include <ctype.h>
 
 extern char* my_fgets(char *, int, FILE *);
-
+extern 
 /*-------------------------------------------------------------------------+
 | Headers of command functions
 +--------------------------------------------------------------------------*/ 
@@ -77,6 +77,24 @@ int my_getline (char** argv, int argvsize)
   }
   argv[argc] = p;
   return argc;
+}
+
+/*-------------------------------------------------------------------------+
+| Function: my_fgets        (called from my_getline / monitor) 
++--------------------------------------------------------------------------*/ 
+char* my_fgets (char* ln, int sz, FILE* f)
+{
+//  fgets(line, MAX_LINE, stdin);
+//  pc.gets(line, MAX_LINE);
+  int i; char c;
+  for(i=0; i<sz-1; i++) {
+      c = pc.getc();
+      ln[i] = c;
+      if ((c == '\n') || (c == '\r')) break;
+  }
+  ln[i] = '\0';
+
+  return ln;
 }
 
 /*-------------------------------------------------------------------------+
