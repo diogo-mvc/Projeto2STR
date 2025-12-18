@@ -1,9 +1,7 @@
 #ifndef APP_TASKS_H
 #define APP_TASKS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -31,7 +29,9 @@ extern "C" {
 
 
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 // Initialize all application tasks
 void app_tasks_init(void);

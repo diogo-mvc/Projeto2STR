@@ -2,10 +2,10 @@
 
 
 // Example task handles (if you want to keep references)
-TaskHandle_t xSensorTaskHandle = NULL;
-TaskHandle_t xBubbleLevelTaskHandle = NULL;
-TaskHandle_t xRTCTaskHandle = NULL;
-TaskHandle_t xDisplayTaskHandle = NULL;
+TaskHandle_t xSensorTaskHandle        = NULL;
+TaskHandle_t xBubbleLevelTaskHandle   = NULL;
+TaskHandle_t xRTCTaskHandle           = NULL;
+TaskHandle_t xDisplayTaskHandle       = NULL;
 TaskHandle_t xUserInterfaceTaskHandle = NULL;
 
 // Task implementations
@@ -49,9 +49,9 @@ void vUserInterfaceTask(void *pvParameters) {
 
 // Task creation and initialization
 void app_tasks_init(void) {
-    xTaskCreate(vSensorTask, "SensorTask", SENSOR_TASK_STACK_SIZE, NULL, SENSOR_TASK_PRIORITY, &xSensorTaskHandle);
-    xTaskCreate(vBubbleLevelTask, "BubbleLevelTask", BUBBLE_LEVEL_TASK_STACK_SIZE, NULL, BUBBLE_LEVEL_TASK_PRIORITY, &xBubbleLevelTaskHandle);
-    xTaskCreate(vRTCTask, "RTCTask", RTC_TASK_STACK_SIZE, NULL, RTC_TASK_PRIORITY, &xRTCTaskHandle);
-    xTaskCreate(vDisplayTask, "DisplayTask", DISPLAY_TASK_STACK_SIZE, NULL, DISPLAY_TASK_PRIORITY, &xDisplayTaskHandle);
+    xTaskCreate(vSensorTask,        "SensorTask",        SENSOR_TASK_STACK_SIZE,         NULL, SENSOR_TASK_PRIORITY,         &xSensorTaskHandle);
+    xTaskCreate(vBubbleLevelTask,   "BubbleLevelTask",   BUBBLE_LEVEL_TASK_STACK_SIZE,   NULL, BUBBLE_LEVEL_TASK_PRIORITY,   &xBubbleLevelTaskHandle);
+    xTaskCreate(vRTCTask,           "RTCTask",           RTC_TASK_STACK_SIZE,            NULL, RTC_TASK_PRIORITY,            &xRTCTaskHandle);
+    xTaskCreate(vDisplayTask,       "DisplayTask",       DISPLAY_TASK_STACK_SIZE,        NULL, DISPLAY_TASK_PRIORITY,        &xDisplayTaskHandle);
     xTaskCreate(vUserInterfaceTask, "UserInterfaceTask", USER_INTERFACE_TASK_STACK_SIZE, NULL, USER_INTERFACE_TASK_PRIORITY, &xUserInterfaceTaskHandle);
 }

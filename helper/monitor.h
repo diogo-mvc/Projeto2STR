@@ -13,12 +13,18 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include "commands.h"
+#include "pin_definition.h"
 
 /*-------------------------------------------------------------------------+
 | Variable and constants definition
 +--------------------------------------------------------------------------*/ 
 const char TitleMsg[] = "\n Application Control Monitor\n";
 const char InvalMsg[] = "\nInvalid command!";
+
+void cmd_sos(int argc, char **argv);
+char* my_fgets(char* ln, int maxlen, FILE* stream);
+int my_getline(char** argv, int argvsize);
+void monitor(void);
 
 struct  command_d {
   void  (*cmd_fnct)(int, char**);
@@ -28,7 +34,7 @@ struct  command_d {
   {cmd_sos,  "sos",  "help"},
   {cmd_send, "send", "<msg> send message"},
   {cmd_sair, "sair", "sair"},
-  {cmd_test, "test", "<arg1> <arg2> test command"}
+  {cmd_test, "test", "<arg1> <arg2> test command"},
   {cmd_rdt,  "rdt",  "read date/time (dd/MM/YYYY hh:mm:ss)"},
   {cmd_sd,   "sd",   "set date (day, month, year)"},
   {cmd_rc,   "rc",   "read clock"},
@@ -55,9 +61,5 @@ struct  command_d {
 #define ARGVECSIZE 3
 #define MAX_LINE   50
 
-void cmd_sos(int argc, char **argv);
-char* my_fgets(char* ln, int maxlen, FILE* stream);
-int my_getline(char** argv, int argvsize);
-void monitor(void);
 
 #endif // MONITOR_H

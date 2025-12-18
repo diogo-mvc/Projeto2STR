@@ -1,12 +1,14 @@
 #ifndef APP_SENSOR_H
 #define APP_SENSOR_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 #include "../drivers/LM75B/LM75B.h"
 #include "../helper/pin_definition.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 // Reads the current temperature from the LM75B sensor
 float sensor_read_temperature(void);
