@@ -12,7 +12,7 @@
 #include "FreeRTOS.h"
 #include "queue.h"
 
-extern QueueHandle_t xQueue;
+extern QueueHandle_t xQueue_commands;
 
 void cmd_sair(int argc, char **argv);
 void cmd_test(int argc, char **argv);

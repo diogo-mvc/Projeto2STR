@@ -1,5 +1,7 @@
 #include "commands.h"
 
+QueueHandle_t xQueue_commands; /*sem isto aqui o extern dá erro*/
+
 /*-------------------------------------------------------------------------+
 | Function: cmd_sair - termina a aplicacao
 +--------------------------------------------------------------------------*/ 
@@ -31,7 +33,7 @@ BaseType_t xStatus;
     if (argc == 2) {
         printf ("msg: %s\n", argv[1]);
         lValueToSend = atoi(argv[1]);
-        xStatus = xQueueSend( xQueue, &lValueToSend, 0 );
+        xStatus = xQueueSend( xQueue_commands, &lValueToSend, 0 );
     }
     else {
         printf ("wrong number of arguments!\n");
