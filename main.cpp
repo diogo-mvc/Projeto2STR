@@ -5,6 +5,7 @@ int main()
 {
     pc.baud(115200);
 	// Initialize all application tasks
+	clock_start();
 	app_tasks_init();
 
 	// Start the FreeRTOS scheduler

@@ -28,7 +28,7 @@ struct  command_d {
   {cmd_sos,  "sos",  "help"},
   {cmd_send, "send", "<msg> send message"},
   {cmd_sair, "sair", "sair"},
-  {cmd_test, "test", "<arg1> <arg2> test command"}
+  {cmd_test, "test", "<arg1> <arg2> test command"},
   {cmd_rdt,  "rdt",  "read date/time (dd/MM/YYYY hh:mm:ss)"},
   {cmd_sd,   "sd",   "set date (day, month, year)"},
   {cmd_rc,   "rc",   "read clock"},

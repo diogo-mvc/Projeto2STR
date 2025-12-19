@@ -125,7 +125,6 @@ private:
     static void _attach(TimeUnit interval);
     static void _alarm(tm alarmTime);
 
-
 };
 
 #endif
