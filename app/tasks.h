@@ -8,6 +8,7 @@
 
 
 #include "display.h"
+#include "helper/monitor.h" /*read user I2C communication*/
 
 
 // Macros for task stack sizes and priorities
@@ -24,9 +25,7 @@
 #define DISPLAY_TASK_PRIORITY       2
 
 #define USER_INTERFACE_TASK_STACK_SIZE 256
-#define USER_INTERFACE_TASK_PRIORITY   2
-
-
+#define USER_INTERFACE_TASK_PRIORITY   1 /*low priority, let the kernel switch*/
 
 
 #ifdef __cplusplus

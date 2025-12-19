@@ -68,15 +68,12 @@ void monitor (void)
     printf("\nCmd> ");
     /* Reading and parsing command line  ----------------------------------*/
     if ((argc = my_getline(argv, ARGVECSIZE)) > 0) {
-      for (p=argv[0]; *p != '\0'; *p=tolower(*p), p++);
+      for (p=argv[0]; *p != '\0'; *p=tolower(*p), p++); /*makes everything lowcase in the line*/
       for (i = 0; i < NCOMMANDS; i++) 
-    if (strcmp(argv[0], commands[i].cmd_name) == 0) 
-      break;
-      /* Executing commands -----------------------------------------------*/
-      if (i < NCOMMANDS)
-    commands[i].cmd_fnct (argc, argv);
-      else  
-    printf("%s", InvalMsg);
+        if (strcmp(argv[0], commands[i].cmd_name) == 0) { break; }/*the user command is in position i*/
+        /* Executing commands -----------------------------------------------*/
+        if (i < NCOMMANDS) { commands[i].cmd_fnct (argc, argv); }
+        else { printf("%s", InvalMsg); }
     } /* if my_getline */
   } /* forever */
 }

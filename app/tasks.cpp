@@ -43,6 +43,7 @@ void vDisplayTask(void *pvParameters) {
 void vUserInterfaceTask(void *pvParameters) {
     for (;;) {
         // Handle user input
+        monitor(); /*does not return and is blocked must of the time*/
         vTaskDelay(pdMS_TO_TICKS(50));
     }
 }

@@ -17,6 +17,7 @@ int main()
     pc.baud(115200);
 	// Initialize all application tasks
 	app_tasks_init();
+	printf("Hello World! Again =)\n");
 
 	// Start the FreeRTOS scheduler
 	vTaskStartScheduler();
