@@ -20,12 +20,11 @@
 #define DISPLAY_TASK_STACK_SIZE     256
 #define DISPLAY_TASK_PRIORITY       2
 
-#define ALARM_TASK_STACK_SIZE      256
-#define ALARM_TASK_PRIORITY        2
-
 #define USER_INTERFACE_TASK_STACK_SIZE 256
 #define USER_INTERFACE_TASK_PRIORITY   1
 
+#define ALARM_TASK_STACK_SIZE      256
+#define ALARM_TASK_PRIORITY        2
 
 
 #ifdef __cplusplus

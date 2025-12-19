@@ -3,9 +3,9 @@
 // Example task handles (if you want to keep references)
 TaskHandle_t xSensorTaskHandle        = NULL;
 TaskHandle_t xBubbleLevelTaskHandle   = NULL;
-TaskHandle_t xRTCTaskHandle           = NULL;
 TaskHandle_t xDisplayTaskHandle       = NULL;
 TaskHandle_t xUserInterfaceTaskHandle = NULL;
+TaskHandle_t xAlarmTaskHandle        = NULL;
 
 void vSensorTask(void *pvParameters) {
     for (;;) {
