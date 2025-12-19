@@ -1,10 +1,21 @@
 #include "commands.h"
 
+QueueHandle_t xQueue_send; /*sem isto aqui o extern dá erro*/
+
 /*-------------------------------------------------------------------------+
 | Function: cmd_sair - termina a aplicacao
 +--------------------------------------------------------------------------*/ 
 void cmd_sair (int argc, char **argv)
 {
+    printf("Sair, não sei o que faz...\n");
+    printf("Toma uma vaca...\n");
+    printf("\n");
+    printf("             (__)    \n");
+    printf("             (00)    \n");
+    printf("       /------\\/     \n");
+    printf("      / |    ||      \n");
+    printf("     *  /\\---/\\      \n");
+    printf("        ~~   ~~      \n");
 //  exit(0);
 }
 
@@ -25,13 +36,13 @@ void cmd_test (int argc, char** argv)
 +--------------------------------------------------------------------------*/ 
 void cmd_send (int argc, char** argv)
 {
-int32_t lValueToSend;
-BaseType_t xStatus;
+    int32_t lValueToSend;
+    BaseType_t xStatus;
 
     if (argc == 2) {
         printf ("msg: %s\n", argv[1]);
         lValueToSend = atoi(argv[1]);
-        xStatus = xQueueSend( xQueue, &lValueToSend, 0 );
+        xStatus = xQueueSend( xQueue_send, &lValueToSend, 0 );
     }
     else {
         printf ("wrong number of arguments!\n");
@@ -43,6 +54,7 @@ BaseType_t xStatus;
 +--------------------------------------------------------------------------*/
 void cmd_rdt(int argc, char **argv)
 {
+    printf("Selected rdt -> you get date and time\n");
 
 }
 
@@ -51,6 +63,7 @@ void cmd_rdt(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_sd(int argc, char **argv)
 {
+    printf("Selected sd -> this sets the date");
 
 }
 
@@ -59,7 +72,7 @@ void cmd_sd(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_rc(int argc, char **argv)
 {
-
+    printf("Selected rc -> this reads the clock?\n");
 }
 
 /*-------------------------------------------------------------------------+
@@ -67,6 +80,7 @@ void cmd_rc(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_sc(int argc, char **argv)
 {
+    printf("This sets the date\n");
 
 }
 
@@ -75,6 +89,7 @@ void cmd_sc(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_rt(int argc, char **argv)
 {
+    printf("Reads the temperature\n");
 
 }
 
@@ -83,6 +98,7 @@ void cmd_rt(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_rmm(int argc, char **argv)
 {
+    printf("read maximum and minimum of temperature\n");
 
 }
 

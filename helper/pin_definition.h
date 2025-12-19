@@ -6,15 +6,14 @@
 #include "../drivers/LM75B/LM75B.h"
 #include "../drivers/C12832/C12832.h"
 
-Serial pc(USBTX,USBRX);
+extern Serial pc;
 
-C12832 lcd(p5, p7, p6, p8, p11);
-LM75B sensor(p28,p27);
-
-DigitalOut led1(LED1);
-DigitalOut led2(LED2);
-DigitalOut led3(LED3);
-DigitalOut led4(LED4);
+extern C12832 lcd;
+extern LM75B sensor;
+extern DigitalOut led1;
+extern DigitalOut led2;
+extern DigitalOut led3;
+extern DigitalOut led4;
 
 // i dont know if these leds are the RGB ones
 

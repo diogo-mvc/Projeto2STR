@@ -1,10 +1,10 @@
 #include "tasks.h"
 
 // Example task handles (if you want to keep references)
-TaskHandle_t xSensorTaskHandle = NULL;
-TaskHandle_t xBubbleLevelTaskHandle = NULL;
-TaskHandle_t xRTCTaskHandle = NULL;
-TaskHandle_t xDisplayTaskHandle = NULL;
+TaskHandle_t xSensorTaskHandle        = NULL;
+TaskHandle_t xBubbleLevelTaskHandle   = NULL;
+TaskHandle_t xRTCTaskHandle           = NULL;
+TaskHandle_t xDisplayTaskHandle       = NULL;
 TaskHandle_t xUserInterfaceTaskHandle = NULL;
 
 void vSensorTask(void *pvParameters) {
@@ -34,6 +34,7 @@ void vDisplayTask(void *pvParameters) {
 void vUserInterfaceTask(void *pvParameters) {
     for (;;) {
         // Handle user input
+        monitor(); /*does not return and is blocked must of the time*/
         vTaskDelay(pdMS_TO_TICKS(50));
     }
 }

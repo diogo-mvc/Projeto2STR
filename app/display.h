@@ -1,13 +1,15 @@
 #ifndef APP_DISPLAY_H
 #define APP_DISPLAY_H
 
+
+
+// Include necessary headers
+#include "../drivers/C12832/C12832.h"
+#include "../helper/pin_definition.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-// Include necessary headers
-#include "../drivers/C12832.h"
-#include "../helper/pin_definition.h"
 
 
 void display_clear(void);

@@ -1,15 +1,14 @@
 #ifndef APP_TASKS_H
 #define APP_TASKS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 #include "FreeRTOS.h"
 #include "task.h"
 
 #include "../drivers/clock.h"
 #include "display.h"
+
 
 // Macros for task stack sizes and priorities
 #define SENSOR_TASK_STACK_SIZE      256
@@ -24,9 +23,11 @@ extern "C" {
 #define USER_INTERFACE_TASK_STACK_SIZE 256
 #define USER_INTERFACE_TASK_PRIORITY   2
 
-#define ALARM_TASK_STACK_SIZE      256
-#define ALARM_TASK_PRIORITY        2
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 // Initialize all application tasks
 void app_tasks_init(void);
