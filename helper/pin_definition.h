@@ -5,11 +5,13 @@
 #include "mbed.h"
 #include "../drivers/LM75B/LM75B.h"
 #include "../drivers/C12832/C12832.h"
+#include "../drivers/MMA7600/MMA7660.h"
 
 extern Serial pc;
 
 extern C12832 lcd;
 extern LM75B sensor;
+extern MMA7660 MMA;
 extern DigitalOut led1;
 extern DigitalOut led2;
 extern DigitalOut led3;

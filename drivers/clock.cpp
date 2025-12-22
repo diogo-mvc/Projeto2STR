@@ -10,7 +10,7 @@ static clock_user_callback_t user_callback = NULL;
 
 static void clock_callback(void) {
     current_time = time(NULL);
-    current_time_tm = clock_time_to_tm(current_time); /*maybe this line should not be inside a callback?*/
+    current_time_tm = clock_time_to_tm(current_time);
     if (user_callback) {
         user_callback();
     }
@@ -33,7 +33,7 @@ struct tm clock_time_to_tm(time_t t) {
         result = *tmp;
     } else {
         // If conversion fails, zero out the struct
-        result = NULL;
+        //result = NULL;
     }
     return result;
 }

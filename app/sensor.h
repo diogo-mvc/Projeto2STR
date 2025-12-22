@@ -17,7 +17,8 @@ float sensor_read_temperature(void);
 // Returns: -1 if below, 0 if equal, 1 if above
 int sensor_compare_temperature(float threshold);
 
-
+//Writes the accelerometer values in the global variables
+int sensor_read_gravity(void);
 
 
 #ifdef __cplusplus

@@ -15,13 +15,16 @@ void vSensorTask(void *pvParameters) {
         // Read sensor, process data
         temperature = sensor_read_temperature();
         printf("Temperature : %f\n",temperature);
-        vTaskDelay(pdMS_TO_TICKS(100));
+        printf("%s", ctime(&current_time));
+        printf("Gx: %f Gy: %f Gz: %f\n",gravity_x,gravity_y,gravity_z);
+        vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }
 
 void vBubbleLevelTask(void *pvParameters) {
     for (;;) {
         // Update bubble level display
+        sensor_read_gravity();
         vTaskDelay(pdMS_TO_TICKS(150));
     }
 }
