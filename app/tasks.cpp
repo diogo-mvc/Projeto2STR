@@ -1,4 +1,7 @@
 #include "tasks.h"
+#include "globals.h"
+#include "sensor.h"
+
 
 // Example task handles (if you want to keep references)
 TaskHandle_t xSensorTaskHandle        = NULL;
@@ -10,6 +13,8 @@ TaskHandle_t xAlarmTaskHandle        = NULL;
 void vSensorTask(void *pvParameters) {
     for (;;) {
         // Read sensor, process data
+        temperature = sensor_read_temperature();
+        printf("Temperature : %f\n",temperature);
         vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
@@ -26,7 +31,8 @@ void vDisplayTask(void *pvParameters) {
     display_init();
     for (;;) {
         
-        display_print_screen(12, 34, 56, true, false, 23.5f, 5);
+        display_print_screen(current_time_tm.tm_hour, current_time_tm.tm_min, current_time_tm.tm_sec, true, false, temperature, 5);
+        //display_print_screen(12, 34, 56, true, false, 23.5f, 5);
         vTaskDelay(pdMS_TO_TICKS(200));
     }
 }
@@ -41,11 +47,13 @@ void vUserInterfaceTask(void *pvParameters) {
 
 void vAlarmTask(void *pvParameters) {
     for (;;) {
+        /*
         uint8_t msg;
         if (xQueueReceive(xBuzzerQueue, &msg, portMAX_DELAY) == pdPASS) {
             // Generate sound using current PWM settings
-            buzzer_play();
+            //buzzer_play();
         }
+        */
     }
 }
 

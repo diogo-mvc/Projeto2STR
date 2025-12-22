@@ -1,14 +1,17 @@
 #ifndef ALARM_H
 #define ALARM_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 #include "../drivers/clock.h"
 #include "FreeRTOS.h"
+#include "queue.h"
 #include "task.h"
 #include <stdio.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 // Set or change an alarm (calls cb at the specified time)
 void clock_set_alarm(const struct tm* alarm_time, void (*cb)(void));

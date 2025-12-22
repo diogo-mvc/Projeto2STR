@@ -12,6 +12,8 @@
 #include "FreeRTOS.h"
 #include "queue.h"
 
+#include "../app/globals.h"
+
 extern QueueHandle_t xQueue_send;
 
 void cmd_sair(int argc, char **argv);

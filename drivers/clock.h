@@ -1,16 +1,16 @@
 #ifndef CLOCK_H
 #define CLOCK_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 #include "RTC/RTC.h"
 #include <ctime>
 #include <cstdio>
 
-// Global variable to hold the current time (updated every second)
-extern volatile time_t current_time;
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 // Initialize the RTC interrupt to call the callback every second
 void clock_start(void);

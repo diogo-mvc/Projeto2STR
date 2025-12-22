@@ -1,14 +1,16 @@
 
+#include "../app/globals.h"
 #include "clock.h"
 
 
-volatile time_t current_time = 0;
+//volatile time_t current_time = 0;
 
 typedef void (*clock_user_callback_t)(void);
-static clock_user_callback_t user_callback = nullptr;
+static clock_user_callback_t user_callback = NULL;
 
 static void clock_callback(void) {
     current_time = time(NULL);
+    current_time_tm = clock_time_to_tm(current_time); /*maybe this line should not be inside a callback?*/
     if (user_callback) {
         user_callback();
     }
@@ -31,7 +33,7 @@ struct tm clock_time_to_tm(time_t t) {
         result = *tmp;
     } else {
         // If conversion fails, zero out the struct
-        result = {};
+        result = NULL;
     }
     return result;
 }

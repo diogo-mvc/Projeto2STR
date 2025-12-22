@@ -18,7 +18,7 @@ void clock_alarm_callback(void) {
     // Sound the buzzer for tala with a pwm signal
     // supposed to be handled by a specific task??
     uint8_t msg = 1;
-    xQueueSendFromISR(xAlarmQueue, &msg, NULL);
+    //xQueueSendFromISR(xAlarmQueue, &msg, NULL);
     printf("[ALARM] Alarm triggered!\n");
 }
 
