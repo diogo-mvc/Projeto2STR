@@ -5,6 +5,7 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
+#include "semphr.h" /*for semaphores and such*/
 
 #include "../drivers/clock.h"
 #include "display.h"

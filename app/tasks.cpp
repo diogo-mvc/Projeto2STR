@@ -3,6 +3,8 @@
 #include "sensor.h"
 
 
+SemaphoreHandle_t xPrintMutex;
+
 // Example task handles (if you want to keep references)
 TaskHandle_t xSensorTaskHandle        = NULL;
 TaskHandle_t xBubbleLevelTaskHandle   = NULL;
@@ -14,10 +16,15 @@ void vSensorTask(void *pvParameters) {
     for (;;) {
         // Read sensor, process data
         temperature = sensor_read_temperature();
+        current_time_tm = clock_time_to_tm(current_time);
+
+        //xSemaphoreTake(xPrintMutex, portMAX_DELAY);
         printf("Temperature : %f\n",temperature);
         printf("%s", ctime(&current_time));
         printf("Gx: %f Gy: %f Gz: %f\n",gravity_x,gravity_y,gravity_z);
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        //xSemaphoreGive(xPrintMutex);
+
+        vTaskDelay(pdMS_TO_TICKS(2000));
     }
 }
 
@@ -62,6 +69,10 @@ void vAlarmTask(void *pvParameters) {
 
 // Task creation and initialization
 void app_tasks_init(void) {
+
+    xPrintMutex = xSemaphoreCreateMutex();
+    configASSERT(xPrintMutex != NULL);
+
     xTaskCreate(vSensorTask, "SensorTask", SENSOR_TASK_STACK_SIZE, NULL, SENSOR_TASK_PRIORITY, &xSensorTaskHandle);
     xTaskCreate(vBubbleLevelTask, "BubbleLevelTask", BUBBLE_LEVEL_TASK_STACK_SIZE, NULL, BUBBLE_LEVEL_TASK_PRIORITY, &xBubbleLevelTaskHandle);
     xTaskCreate(vDisplayTask, "DisplayTask", DISPLAY_TASK_STACK_SIZE, NULL, DISPLAY_TASK_PRIORITY, &xDisplayTaskHandle);

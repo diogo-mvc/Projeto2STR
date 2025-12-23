@@ -54,7 +54,11 @@ void cmd_send (int argc, char** argv)
 +--------------------------------------------------------------------------*/
 void cmd_rdt(int argc, char **argv)
 {
-    printf("Selected rdt -> you get date and time\n");
+    printf("Selected rdt -> here is date and time\n");
+    char buf[16];
+    snprintf(buf, sizeof(buf), "%2s/%2s/%2s %02d:%02d:%02d", current_time_tm.tm_yday , current_time_tm.tm_mon, current_time_tm.tm_year\
+     , current_time_tm.tm_hour, current_time_tm.tm_min, current_time_tm.tm_sec);
+    printf("%s", buf);
 
 }
 

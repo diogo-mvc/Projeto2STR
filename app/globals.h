@@ -6,6 +6,11 @@
 #include "../drivers/clock.h" /*to have access to tm struct, otherwise I cannot change inside it*/
 #include "../helper/config.h"
 
+
+/*a strcut tm tem os seguintes campos:*/
+/*tm_sec, tm_min , tm_hour*/
+/*tm_mday , tm_wday , tm_yday , tm_mon, tm_year*/
+
 struct ConfigSound{ bool enable ; int duty ; float period; };
 
 extern time_t current_time;

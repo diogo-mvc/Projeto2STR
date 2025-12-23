@@ -10,10 +10,11 @@ static clock_user_callback_t user_callback = NULL;
 
 static void clock_callback(void) {
     current_time = time(NULL);
-    current_time_tm = clock_time_to_tm(current_time);
+    //printf("%s", ctime(&current_time)); /*printf bloqueia o I2C->mau debug*/
+    /*
     if (user_callback) {
         user_callback();
-    }
+    }*/
 }
 
 // User can set their own callback (optional)
