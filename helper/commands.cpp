@@ -16,6 +16,8 @@ void cmd_sair (int argc, char **argv)
     printf("      / |    ||      \n");
     printf("     *  /\\---/\\      \n");
     printf("        ~~   ~~      \n");
+    printf("\n");
+    printf("Cmd> ");
 //  exit(0);
 }
 
@@ -29,6 +31,7 @@ void cmd_test (int argc, char** argv)
   /* exemplo -- escreve argumentos */
   for (i=0; i<argc; i++)
     printf ("\nargv[%d] = %s", i, argv[i]);
+    printf("Cmd> ");
 }
 
 /*-------------------------------------------------------------------------+
@@ -47,6 +50,7 @@ void cmd_send (int argc, char** argv)
     else {
         printf ("wrong number of arguments!\n");
     }
+    printf("Cmd> ");
 }
 
 /*-------------------------------------------------------------------------+
@@ -55,10 +59,20 @@ void cmd_send (int argc, char** argv)
 void cmd_rdt(int argc, char **argv)
 {
     printf("Selected rdt -> here is date and time\n");
-    char buf[16];
-    snprintf(buf, sizeof(buf), "%2s/%2s/%2s %02d:%02d:%02d", current_time_tm.tm_yday , current_time_tm.tm_mon, current_time_tm.tm_year\
-     , current_time_tm.tm_hour, current_time_tm.tm_min, current_time_tm.tm_sec);
-    printf("%s", buf);
+
+    char buf[32];
+
+    snprintf(buf, sizeof(buf),
+             "%02d/%02d/%04d %02d:%02d:%02d",
+             current_time_tm.tm_mday,
+             current_time_tm.tm_mon + 1,
+             current_time_tm.tm_year + 1900,
+             current_time_tm.tm_hour,
+             current_time_tm.tm_min,
+             current_time_tm.tm_sec);
+
+    printf("%s\n", buf);
+    printf("Cmd> ");
 
 }
 
@@ -68,6 +82,7 @@ void cmd_rdt(int argc, char **argv)
 void cmd_sd(int argc, char **argv)
 {
     printf("Selected sd -> this sets the date");
+    printf("Cmd> ");
 
 }
 
@@ -77,6 +92,9 @@ void cmd_sd(int argc, char **argv)
 void cmd_rc(int argc, char **argv)
 {
     printf("Selected rc -> this reads the clock?\n");
+    printf("Here is my raw counter:\n");
+    printf("%d\n",current_time);
+    printf("Cmd> ");
 }
 
 /*-------------------------------------------------------------------------+
@@ -84,7 +102,8 @@ void cmd_rc(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_sc(int argc, char **argv)
 {
-    printf("This sets the date\n");
+    printf("This sets the clock\n");
+    printf("Cmd> ");
 
 }
 
@@ -93,7 +112,9 @@ void cmd_sc(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_rt(int argc, char **argv)
 {
-    printf("Reads the temperature\n");
+    printf("rt -> read the temperature\n");
+    printf("%f\n",temperature);
+    printf("Cmd> ");
 
 }
 
@@ -102,7 +123,11 @@ void cmd_rt(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_rmm(int argc, char **argv)
 {
-    printf("read maximum and minimum of temperature\n");
+    printf("rmm -> read maximum and minimum of temperature\n");
+    printf("Maximum : %f\n",temperature_max);
+    printf("Minimum : %f\n",temperature_min);
+    printf("\n");
+    printf("Cmd> ");
 
 }
 
@@ -111,6 +136,11 @@ void cmd_rmm(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_cmm(int argc, char **argv)
 {
+    printf("cmm -> clear maximum and minimum of temperature\n");
+    temperature_max = -273.15; temperature_min = 15000000.0;
+    printf("cleared!\n");
+    printf("\n");
+    printf("Cmd> ");
 
 }
 
@@ -183,6 +213,14 @@ void cmd_adat(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_rts(int argc, char **argv)
 {
+    printf("rts -> read task state\n");
+    printf("Bubble Level : ");
+    if(Bubble_enable == true){printf("enabled\n");}else{printf("disabled\n");}
+    printf("Hit Bit Game :");
+    if(HitBit_enable == true){printf("enabled\n");}else{printf("disabled\n");}
+    printf("Config Sound :");
+    if(ConfigSound.enable == true){printf("enabled\n");}else{printf("disabled\n");}
+    printf("\nCmd> ");
 
 }
 
@@ -191,6 +229,12 @@ void cmd_rts(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_adbl(int argc, char **argv)
 {
+    printf("adbl -> toggle state of Bubble level\n");
+    Bubble_enable = !Bubble_enable;
+    printf("Toggled!\n");
+    printf("Bubble Level : ");
+    if(Bubble_enable == true){printf("enabled\n");}else{printf("disabled\n");}
+    printf("\nCmd> ");
 
 }
 
@@ -199,6 +243,12 @@ void cmd_adbl(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_adhb(int argc, char **argv)
 {
+    printf("adhb -> toggle state of Hitbit game\n");
+    HitBit_enable = !HitBit_enable;
+    printf("Toggled!\n");
+    printf("Hit Bit Game :");
+    if(HitBit_enable == true){printf("enabled\n");}else{printf("disabled\n");}
+    printf("\nCmd> ");
 
 }
 
@@ -207,6 +257,12 @@ void cmd_adhb(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_adcs(int argc, char **argv)
 {
+    printf("adcs -> toggle state of Config Sound\n");
+    ConfigSound.enable = !ConfigSound.enable;
+    printf("Toggled!\n");
+    printf("Config Sound :");
+    if(ConfigSound.enable == true){printf("enabled\n");}else{printf("disabled\n");}
+    printf("\nCmd> ");
 
 }
 

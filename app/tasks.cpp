@@ -16,12 +16,13 @@ void vSensorTask(void *pvParameters) {
     for (;;) {
         // Read sensor, process data
         temperature = sensor_read_temperature();
-        current_time_tm = clock_time_to_tm(current_time);
+        if (temperature > temperature_max){temperature_max = temperature;}
+        if (temperature < temperature_min){temperature_min = temperature;}
 
         //xSemaphoreTake(xPrintMutex, portMAX_DELAY);
-        printf("Temperature : %f\n",temperature);
-        printf("%s", ctime(&current_time));
-        printf("Gx: %f Gy: %f Gz: %f\n",gravity_x,gravity_y,gravity_z);
+        //printf("Temperature : %f\n",temperature);
+        //printf("%s", ctime(&current_time));
+        //printf("Gx: %f Gy: %f Gz: %f\n",gravity_x,gravity_y,gravity_z);
         //xSemaphoreGive(xPrintMutex);
 
         vTaskDelay(pdMS_TO_TICKS(2000));
@@ -51,12 +52,13 @@ void vUserInterfaceTask(void *pvParameters) {
     for (;;) {
         // Handle user input
         monitor(); /*does not return and is blocked must of the time*/
-        vTaskDelay(pdMS_TO_TICKS(50));
+        vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
 
 void vAlarmTask(void *pvParameters) {
     for (;;) {
+        if (clock_updated == true){current_time_tm = clock_time_to_tm(current_time); clock_updated = false;}
         /*
         uint8_t msg;
         if (xQueueReceive(xBuzzerQueue, &msg, portMAX_DELAY) == pdPASS) {
@@ -64,6 +66,7 @@ void vAlarmTask(void *pvParameters) {
             //buzzer_play();
         }
         */
+        vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
 

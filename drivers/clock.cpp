@@ -9,7 +9,9 @@ typedef void (*clock_user_callback_t)(void);
 static clock_user_callback_t user_callback = NULL;
 
 static void clock_callback(void) {
-    current_time = time(NULL);
+    //current_time = time(NULL);
+    current_time += 1;
+    clock_updated = true;
     //printf("%s", ctime(&current_time)); /*printf bloqueia o I2C->mau debug*/
     /*
     if (user_callback) {
@@ -23,7 +25,10 @@ void clock_user_callback(clock_user_callback_t cb) {
 }
 
 void clock_start(void) {
+    set_time(1766361600);
+    current_time_tm = RTC::getDefaultTM();
     RTC::attach(&clock_callback, RTC::Second);
+    current_time = 1766361600;
 }
 
 // Convert time_t to struct tm (local time)
