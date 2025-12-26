@@ -19,10 +19,10 @@ void display_draw_vline(int x, int y_start, int y_end);
 void display_print_time(int hour, int min, int sec);
 void display_print_alarm_status(bool alarm_clock_enabled, bool temp_alarm_enabled);
 void display_print_temperature(float temperature);
-void display_print_bubble_level(int value);
+void display_print_bubble_level(int value_x, int value_y);
 
 void display_init(void);
-void display_print_screen(int hour, int min, int sec, bool alarm_clock_enabled, bool temp_alarm_enabled, float temp, int bubble_level);
+void display_print_screen(int hour, int min, int sec, bool alarm_clock_enabled, bool temp_alarm_enabled, float temp, int bubble_level_x, int bubble_level_y);
 
 #ifdef __cplusplus
 }

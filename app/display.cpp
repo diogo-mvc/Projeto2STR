@@ -63,12 +63,13 @@ void display_print_temperature(float temp)
 }
 
 // Print the bubble level value at the right
-void display_print_bubble_level(int value)
+void display_print_bubble_level(int value_x, int value_y)
 {   
     // based on value calculate position of bubble
     // needs to be tested and adjusted
     lcd.locate(100, 10);
-    lcd.circle(100, 10, 5, 1);
+    lcd.circle(100, 16, 2, 1); //center mark
+    lcd.circle(100+value_x, 16+value_y, 5, 1);
 }
 
 void display_init(void) {
@@ -79,12 +80,12 @@ void display_init(void) {
 }
 
 // Print the full status screen
-void display_print_screen(int hour, int min, int sec, bool alarm_clock_enabled, bool temp_alarm_enabled, float temp, int bubble_level)
+void display_print_screen(int hour, int min, int sec, bool alarm_clock_enabled, bool temp_alarm_enabled, float temp, int bubble_level_x,int bubble_level_y)
 {
     display_clear();
     display_print_time(hour, min, sec);
     display_print_alarm_status(alarm_clock_enabled, temp_alarm_enabled);
     display_print_temperature(temp);
-    display_print_bubble_level(bubble_level);
+    display_print_bubble_level(bubble_level_x,bubble_level_y);
     display_draw_vline(96, 0, lcd.height());
 }

@@ -1,6 +1,7 @@
 #include "tasks.h"
 #include "globals.h"
 #include "sensor.h"
+#include <cmath>
 
 
 SemaphoreHandle_t xPrintMutex;
@@ -42,7 +43,10 @@ void vDisplayTask(void *pvParameters) {
     display_init();
     for (;;) {
         
-        display_print_screen(current_time_tm.tm_hour, current_time_tm.tm_min, current_time_tm.tm_sec, true, false, temperature, 5);
+        int shift_bubble_x = -floor( 50 * gravity_x/(0.984529) );
+        int shift_bubble_y = -floor( 50 * gravity_y/(0.984529) );
+        display_print_screen(current_time_tm.tm_hour, current_time_tm.tm_min, current_time_tm.tm_sec, \
+        true, false, temperature, shift_bubble_x, shift_bubble_y);
         //display_print_screen(12, 34, 56, true, false, 23.5f, 5);
         vTaskDelay(pdMS_TO_TICKS(200));
     }
