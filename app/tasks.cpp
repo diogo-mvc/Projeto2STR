@@ -20,6 +20,8 @@ void vSensorTask(void *pvParameters) {
         if (temperature > temperature_max){temperature_max = temperature;}
         if (temperature < temperature_min){temperature_min = temperature;}
 
+        displayRGB(temperature);
+
         //xSemaphoreTake(xPrintMutex, portMAX_DELAY);
         //printf("Temperature : %f\n",temperature);
         //printf("%s", ctime(&current_time));
@@ -43,8 +45,8 @@ void vDisplayTask(void *pvParameters) {
     display_init();
     for (;;) {
         
-        int shift_bubble_x = -floor( 50 * gravity_x/(0.984529) );
-        int shift_bubble_y = -floor( 50 * gravity_y/(0.984529) );
+        int shift_bubble_x = -floor( 16 * gravity_x/(0.984529) );
+        int shift_bubble_y = -floor( 16 * gravity_y/(0.984529) );
         display_print_screen(current_time_tm.tm_hour, current_time_tm.tm_min, current_time_tm.tm_sec, \
         true, false, temperature, shift_bubble_x, shift_bubble_y);
         //display_print_screen(12, 34, 56, true, false, 23.5f, 5);
@@ -55,7 +57,7 @@ void vDisplayTask(void *pvParameters) {
 void vUserInterfaceTask(void *pvParameters) {
     for (;;) {
         // Handle user input
-        monitor(); /*does not return and is blocked must of the time*/
+        monitor(); /*does not return and is blocked most of the time*/
         vTaskDelay(pdMS_TO_TICKS(100));
     }
 }

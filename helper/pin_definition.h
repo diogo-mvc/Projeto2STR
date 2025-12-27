@@ -17,7 +17,9 @@ extern DigitalOut led2;
 extern DigitalOut led3;
 extern DigitalOut led4;
 
-// i dont know if these leds are the RGB ones
+extern PwmOut r ;
+extern PwmOut g ;
+extern PwmOut b ;
 
 
 

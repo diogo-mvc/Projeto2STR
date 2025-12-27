@@ -6,6 +6,7 @@
 // Include necessary headers
 #include "../drivers/C12832/C12832.h"
 #include "../helper/pin_definition.h"
+#include "globals.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -23,6 +24,7 @@ void display_print_bubble_level(int value_x, int value_y);
 
 void display_init(void);
 void display_print_screen(int hour, int min, int sec, bool alarm_clock_enabled, bool temp_alarm_enabled, float temp, int bubble_level_x, int bubble_level_y);
+void displayRGB(float t);
 
 #ifdef __cplusplus
 }

@@ -24,5 +24,6 @@ extern float temperature_max; extern float temperature_min;
 extern bool Bubble_enable , HitBit_enable;
 extern bool temp_alarm_flag , time_alarm_flag ;
 extern volatile bool clock_updated ;
+extern float tlow; extern float thigh;
 
 #endif //GLOBALS_H

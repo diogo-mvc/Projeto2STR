@@ -13,6 +13,9 @@ DigitalOut led2(LED2);
 DigitalOut led3(LED3);
 DigitalOut led4(LED4);
 
+PwmOut r (p23);
+PwmOut g (p24);
+PwmOut b (p25);
 
 
 int main() 

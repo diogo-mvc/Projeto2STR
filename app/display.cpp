@@ -89,3 +89,18 @@ void display_print_screen(int hour, int min, int sec, bool alarm_clock_enabled, 
     display_print_bubble_level(bubble_level_x,bubble_level_y);
     display_draw_vline(96, 0, lcd.height());
 }
+
+void displayRGB(float t){
+    if (t > thigh){ /*hot, make it red*/
+        r = 0.0; g = 1.0; b = 1.0;
+    }
+    else if (t < tlow){ /*cold, make it blue*/
+        r = 1.0; g = 1.0; b = 0.0;
+    }
+    else{
+        r = 1.0 - ( (t-tlow)/(thigh-tlow) );
+        g = 1.0;
+        b = (t-tlow)/(thigh-tlow);
+    }
+
+}
