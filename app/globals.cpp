@@ -12,4 +12,8 @@ bool HitBit_enable = (bool)HB;
 ConfigSound_t ConfigSound = { .enable = (bool)CS , .duty=50 , .period = 0.005 };
 bool temp_alarm_flag , time_alarm_flag ;
 volatile bool clock_updated = false;
-float tlow = TLOW ; float thigh = THIGH ;
+
+int pmon = PMON;
+int tala = TALA;
+float tlow = TLOW ; 
+float thigh = THIGH ;

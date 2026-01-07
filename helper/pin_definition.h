@@ -20,6 +20,7 @@ extern DigitalOut led4;
 extern PwmOut r ;
 extern PwmOut g ;
 extern PwmOut b ;
+extern PwmOut buzzer;
 
 
 

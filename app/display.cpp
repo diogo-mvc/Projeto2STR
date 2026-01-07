@@ -103,4 +103,6 @@ void displayRGB(float t){
         b = (t-tlow)/(thigh-tlow);
     }
 
+    buzzer = 0.0; /*make noise I think?*/
+
 }

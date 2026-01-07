@@ -16,6 +16,7 @@ DigitalOut led4(LED4);
 PwmOut r (p23);
 PwmOut g (p24);
 PwmOut b (p25);
+PwmOut buzzer (p26);
 
 
 int main() 

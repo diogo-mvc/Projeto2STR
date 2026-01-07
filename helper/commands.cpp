@@ -157,6 +157,8 @@ void cmd_rp(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_mmp(int argc, char **argv)
 {
+    printf("Monitoring period changed to:\n")
+    printf("PMON = %d\n",argv[1]);
 
 }
 

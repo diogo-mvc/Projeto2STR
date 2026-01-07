@@ -45,7 +45,7 @@ void vDisplayTask(void *pvParameters) {
     display_init();
     for (;;) {
         
-        int shift_bubble_x = -floor( 16 * gravity_x/(0.984529) );
+        int shift_bubble_x = floor( 16 * gravity_x/(0.984529) );
         int shift_bubble_y = -floor( 16 * gravity_y/(0.984529) );
         display_print_screen(current_time_tm.tm_hour, current_time_tm.tm_min, current_time_tm.tm_sec, \
         true, false, temperature, shift_bubble_x, shift_bubble_y);
@@ -64,7 +64,10 @@ void vUserInterfaceTask(void *pvParameters) {
 
 void vAlarmTask(void *pvParameters) {
     for (;;) {
-        if (clock_updated == true){current_time_tm = clock_time_to_tm(current_time); clock_updated = false;}
+        if (clock_updated == true){ //spinlock
+            current_time_tm = clock_time_to_tm(current_time); 
+            clock_updated = false;
+        }
         /*
         uint8_t msg;
         if (xQueueReceive(xBuzzerQueue, &msg, portMAX_DELAY) == pdPASS) {
@@ -72,7 +75,7 @@ void vAlarmTask(void *pvParameters) {
             //buzzer_play();
         }
         */
-        vTaskDelay(pdMS_TO_TICKS(100));
+        vTaskDelay(pdMS_TO_TICKS(100)); /*trying to give control to the OS but it is still a spinlock ='(*/
     }
 }
 
