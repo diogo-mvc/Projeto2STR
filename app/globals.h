@@ -16,6 +16,11 @@ extern ConfigSound_t ConfigSound;
 
 extern time_t current_time;
 extern struct tm current_time_tm;
+extern int alarm_time_seconds ;
+extern int alarm_time_minutes ;
+extern int alarm_time_hours ;
+extern bool AlarmClock_enable ;
+extern bool AlarmTemp_enable ;
 extern float gravity_x ;
 extern float gravity_y ;
 extern float gravity_z ;
