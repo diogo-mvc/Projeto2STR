@@ -83,7 +83,10 @@ void cmd_sd(int argc, char **argv)
 {
     printf("Selected sd -> this sets the date");
     printf("Cmd> ");
-
+    scanf("%d %d %d", &current_time_tm.tm_mday, &current_time_tm.tm_mon, &current_time_tm.tm_year);
+    current_time_tm.tm_mon -= 1; /*tm_mon vai de 0 a 11*/
+    current_time_tm.tm_year -= 1900; /*tm_year é anos desde 1900*/
+    current_time = mktime(&current_time_tm);
 }
 
 /*-------------------------------------------------------------------------+
@@ -93,6 +96,7 @@ void cmd_rc(int argc, char **argv)
 {
     printf("Selected rc -> this reads the clock?\n");
     printf("Here is my raw counter:\n");
+    
     printf("%d\n",current_time);
     printf("Cmd> ");
 }
@@ -149,7 +153,10 @@ void cmd_cmm(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_rp(int argc, char **argv)
 {
-
+    printf("Reading parameters:\n");
+    printf("PMON = %d\n",pmon);
+    printf("TALA = %d\n",tala);
+    printf("Cmd> ");
 }
 
 /*-------------------------------------------------------------------------+
@@ -159,7 +166,6 @@ void cmd_mmp(int argc, char **argv)
 {
     printf("Monitoring period changed to:\n")
     printf("PMON = %d\n",argv[1]);
-
 }
 
 /*-------------------------------------------------------------------------+
@@ -167,7 +173,8 @@ void cmd_mmp(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_mta(int argc, char **argv)
 {
-
+    printf("Time alarm changed to:\n");
+    printf("TALA = %d\n",argv[1]);
 }
 
 /*-------------------------------------------------------------------------+
@@ -175,6 +182,21 @@ void cmd_mta(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_rai(int argc, char **argv)
 {
+    printf("Reading alarm info:\n");
+    printf("Alarm Time : %02d:%02d:%02d\n",alarm_time_hours,alarm_time_minutes,alarm_time_seconds);
+    printf("Temperature Low Threshold : %f\n",tlow); 
+    printf("Temperature High Threshold : %f\n",thigh);
+    printf("Alarm Clock : ");
+    if(AlarmClock_enable == true)
+    {
+        printf("enabled\n");
+    }else
+    {
+        printf("disabled\n");
+    }
+    printf("Alarm Temperature : ");
+    if(AlarmTemp_enable == true){printf("enabled\n");}else{printf("disabled\n");}
+    printf("Cmd> ");
 
 }
 
@@ -183,7 +205,15 @@ void cmd_rai(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_sac(int argc, char **argv)
 {
-
+    printf("Setting alarm clock:\n");
+    printf("Enter hours, minutes, seconds:\n");
+    scanf("%d %d %d", &alarm_time_hours, &alarm_time_minutes, &alarm_time_seconds);
+    if (alarm_time_hours <0 || alarm_time_hours >23 || alarm_time_minutes <0 || alarm_time_minutes >59 || alarm_time_seconds <0 || alarm_time_seconds >59)
+    {
+        printf("Invalid time! Please enter a valid time.\n");
+        /*reset to default*/
+        alarm_time_hours = 0; alarm_time_minutes = 0; alarm_time_seconds = 0;
+    }
 }
 
 /*-------------------------------------------------------------------------+
@@ -191,6 +221,8 @@ void cmd_sac(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_sat(int argc, char **argv)
 {
+    printf("Setting alarm temperature thresholds:\n");
+    printf("Cmd> ");
 
 }
 
@@ -199,7 +231,8 @@ void cmd_sat(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_adac(int argc, char **argv)
 {
-
+    printf("Setting alarm clock:\n");
+    printf("Cmd> ");
 }
 
 /*-------------------------------------------------------------------------+
@@ -207,7 +240,8 @@ void cmd_adac(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_adat(int argc, char **argv)
 {
-
+    printf("Setting alarm temperature:\n");
+    printf("Cmd> ");
 }
 
 /*-------------------------------------------------------------------------+
