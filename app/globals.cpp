@@ -4,6 +4,11 @@
 /*State variables in one clean file*/
 time_t current_time; // Global variable to hold the current time (updated every second)
 struct tm current_time_tm;            //More digestible time, must convert before using though
+int alarm_time_seconds = ALAS ;
+int alarm_time_minutes = ALAM ;
+int alarm_time_hours   = ALAH ;
+bool AlarmClock_enable = ALAC ;
+bool AlarmTemp_enable  = ALAT ;
 float gravity_x , gravity_y , gravity_z;
 float temperature;
 float temperature_max = -273.15; float temperature_min = 15000000.0;

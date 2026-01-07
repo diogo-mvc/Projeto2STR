@@ -17,7 +17,7 @@ void cmd_sair (int argc, char **argv)
     printf("     *  /\\---/\\      \n");
     printf("        ~~   ~~      \n");
     printf("\n");
-    printf("Cmd> ");
+    //printf("Cmd> ");
 //  exit(0);
 }
 
@@ -31,7 +31,7 @@ void cmd_test (int argc, char** argv)
   /* exemplo -- escreve argumentos */
   for (i=0; i<argc; i++)
     printf ("\nargv[%d] = %s", i, argv[i]);
-    printf("Cmd> ");
+    //printf("Cmd> ");
 }
 
 /*-------------------------------------------------------------------------+
@@ -50,7 +50,7 @@ void cmd_send (int argc, char** argv)
     else {
         printf ("wrong number of arguments!\n");
     }
-    printf("Cmd> ");
+    //printf("Cmd> ");
 }
 
 /*-------------------------------------------------------------------------+
@@ -63,7 +63,7 @@ void cmd_rdt(int argc, char **argv)
     char buf[32];
 
     snprintf(buf, sizeof(buf),
-             "%02d/%02d/%04d %02d:%02d:%02d",
+             "%02d/%02d/%04d %02d:%02d:%02d\n",
              current_time_tm.tm_mday,
              current_time_tm.tm_mon + 1,
              current_time_tm.tm_year + 1900,
@@ -72,7 +72,7 @@ void cmd_rdt(int argc, char **argv)
              current_time_tm.tm_sec);
 
     printf("%s\n", buf);
-    printf("Cmd> ");
+    //printf("Cmd> ");
 
 }
 
@@ -98,7 +98,7 @@ void cmd_rc(int argc, char **argv)
     printf("Here is my raw counter:\n");
     
     printf("%d\n",current_time);
-    printf("Cmd> ");
+    //printf("Cmd> ");
 }
 
 /*-------------------------------------------------------------------------+
@@ -107,7 +107,7 @@ void cmd_rc(int argc, char **argv)
 void cmd_sc(int argc, char **argv)
 {
     printf("This sets the clock\n");
-    printf("Cmd> ");
+    //printf("Cmd> ");
 
 }
 
@@ -118,7 +118,7 @@ void cmd_rt(int argc, char **argv)
 {
     printf("rt -> read the temperature\n");
     printf("%f\n",temperature);
-    printf("Cmd> ");
+    //printf("Cmd> ");
 
 }
 
@@ -131,7 +131,7 @@ void cmd_rmm(int argc, char **argv)
     printf("Maximum : %f\n",temperature_max);
     printf("Minimum : %f\n",temperature_min);
     printf("\n");
-    printf("Cmd> ");
+    //printf("Cmd> ");
 
 }
 
@@ -144,7 +144,7 @@ void cmd_cmm(int argc, char **argv)
     temperature_max = -273.15; temperature_min = 15000000.0;
     printf("cleared!\n");
     printf("\n");
-    printf("Cmd> ");
+    //printf("Cmd> ");
 
 }
 
@@ -156,7 +156,7 @@ void cmd_rp(int argc, char **argv)
     printf("Reading parameters:\n");
     printf("PMON = %d\n",pmon);
     printf("TALA = %d\n",tala);
-    printf("Cmd> ");
+    //printf("Cmd> ");
 }
 
 /*-------------------------------------------------------------------------+
@@ -164,7 +164,7 @@ void cmd_rp(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_mmp(int argc, char **argv)
 {
-    printf("Monitoring period changed to:\n")
+    printf("Monitoring period changed to:\n");
     printf("PMON = %d\n",argv[1]);
 }
 
@@ -196,7 +196,7 @@ void cmd_rai(int argc, char **argv)
     }
     printf("Alarm Temperature : ");
     if(AlarmTemp_enable == true){printf("enabled\n");}else{printf("disabled\n");}
-    printf("Cmd> ");
+    //printf("Cmd> ");
 
 }
 
@@ -222,7 +222,7 @@ void cmd_sac(int argc, char **argv)
 void cmd_sat(int argc, char **argv)
 {
     printf("Setting alarm temperature thresholds:\n");
-    printf("Cmd> ");
+    //printf("Cmd> ");
 
 }
 
@@ -232,7 +232,15 @@ void cmd_sat(int argc, char **argv)
 void cmd_adac(int argc, char **argv)
 {
     printf("Setting alarm clock:\n");
-    printf("Cmd> ");
+    AlarmClock_enable = ! AlarmClock_enable;
+    if(AlarmClock_enable == true)
+    {
+        printf("enabled\n");
+    }else
+    {
+        printf("disabled\n");
+    }
+    //printf("Cmd> ");
 }
 
 /*-------------------------------------------------------------------------+
@@ -241,7 +249,15 @@ void cmd_adac(int argc, char **argv)
 void cmd_adat(int argc, char **argv)
 {
     printf("Setting alarm temperature:\n");
-    printf("Cmd> ");
+    AlarmTemp_enable = ! AlarmTemp_enable;
+    if(AlarmTemp_enable == true)
+    {
+        printf("enabled\n");
+    }else
+    {
+        printf("disabled\n");
+    }
+    //printf("Cmd> ");
 }
 
 /*-------------------------------------------------------------------------+
@@ -256,7 +272,7 @@ void cmd_rts(int argc, char **argv)
     if(HitBit_enable == true){printf("enabled\n");}else{printf("disabled\n");}
     printf("Config Sound :");
     if(ConfigSound.enable == true){printf("enabled\n");}else{printf("disabled\n");}
-    printf("\nCmd> ");
+    //printf("\nCmd> ");
 
 }
 
@@ -270,7 +286,7 @@ void cmd_adbl(int argc, char **argv)
     printf("Toggled!\n");
     printf("Bubble Level : ");
     if(Bubble_enable == true){printf("enabled\n");}else{printf("disabled\n");}
-    printf("\nCmd> ");
+    //printf("\nCmd> ");
 
 }
 
@@ -284,7 +300,7 @@ void cmd_adhb(int argc, char **argv)
     printf("Toggled!\n");
     printf("Hit Bit Game :");
     if(HitBit_enable == true){printf("enabled\n");}else{printf("disabled\n");}
-    printf("\nCmd> ");
+    //printf("\nCmd> ");
 
 }
 
@@ -298,7 +314,7 @@ void cmd_adcs(int argc, char **argv)
     printf("Toggled!\n");
     printf("Config Sound :");
     if(ConfigSound.enable == true){printf("enabled\n");}else{printf("disabled\n");}
-    printf("\nCmd> ");
+    //printf("\nCmd> ");
 
 }
 

@@ -3,6 +3,8 @@
 #include "sensor.h"
 #include <cmath>
 
+#define BUZZER_ON  0x01
+#define BUZZER_OFF 0x02
 
 SemaphoreHandle_t xPrintMutex;
 
@@ -11,7 +13,8 @@ TaskHandle_t xSensorTaskHandle        = NULL;
 TaskHandle_t xBubbleLevelTaskHandle   = NULL;
 TaskHandle_t xDisplayTaskHandle       = NULL;
 TaskHandle_t xUserInterfaceTaskHandle = NULL;
-TaskHandle_t xAlarmTaskHandle        = NULL;
+TaskHandle_t xAlarmTaskHandle         = NULL;
+TaskHandle_t xBuzzerTaskHandle        = NULL;
 
 void vSensorTask(void *pvParameters) {
     for (;;) {
@@ -19,6 +22,8 @@ void vSensorTask(void *pvParameters) {
         temperature = sensor_read_temperature();
         if (temperature > temperature_max){temperature_max = temperature;}
         if (temperature < temperature_min){temperature_min = temperature;}
+
+        if ( (temperature > thigh) || (temperature < tlow) ){ temp_alarm_flag = true; }
 
         displayRGB(temperature);
 
@@ -71,15 +76,18 @@ void vAlarmTask(void *pvParameters) {
         }
 
         if (temp_alarm_flag || time_alarm_flag){
-            //buzzer_play();
+            //play buzzer
+            xTaskNotify(xBuzzerTaskHandle, BUZZER_ON, eSetBits);
             /*alarm stated now*/
             if (alarm_started_time == 0){alarm_started_time = current_time;}
             
             /*time to shut up*/
             if (current_time - alarm_started_time >= tala){
-                //buzzer_shut_up();
+                //shut up buzzer
+                xTaskNotify(xBuzzerTaskHandle, BUZZER_OFF, eSetBits);
                 alarm_started_time = 0;
-                temp_alarm_flag
+                temp_alarm_flag = false;
+                time_alarm_flag = false;
             }
         }
 
@@ -94,17 +102,43 @@ void vAlarmTask(void *pvParameters) {
     }
 }
 
+void vBuzzerTask(void *Parameters){
+    uint32_t ulNotificationValue = 0;
+    for(;;){
+        xTaskNotifyWait(
+            0x00,                   // Don’t clear on entry
+            BUZZER_ON | BUZZER_OFF, // Clear these on exit
+            &ulNotificationValue,
+            portMAX_DELAY
+        );
+
+        if (ulNotificationValue & BUZZER_ON)
+        {
+            /*Buzzer_On*/
+            //printf("pot1 %u , pot2 %u\n",pot1.read_u16(),pot2.read_u16());
+            buzzer = pot1;
+            buzzer.period(float(pot2)/220.0);
+        }
+
+        if (ulNotificationValue & BUZZER_OFF)
+        {
+            /*Buzzer_Off*/
+            buzzer = 1.0;
+        }
+    }
+}
+
 // Task creation and initialization
 void app_tasks_init(void) {
 
     xPrintMutex = xSemaphoreCreateMutex();
     configASSERT(xPrintMutex != NULL);
 
-    xTaskCreate(vSensorTask, "SensorTask", SENSOR_TASK_STACK_SIZE, NULL, SENSOR_TASK_PRIORITY, &xSensorTaskHandle);
-    xTaskCreate(vBubbleLevelTask, "BubbleLevelTask", BUBBLE_LEVEL_TASK_STACK_SIZE, NULL, BUBBLE_LEVEL_TASK_PRIORITY, &xBubbleLevelTaskHandle);
-    xTaskCreate(vDisplayTask, "DisplayTask", DISPLAY_TASK_STACK_SIZE, NULL, DISPLAY_TASK_PRIORITY, &xDisplayTaskHandle);
+    xTaskCreate(vSensorTask,        "SensorTask", SENSOR_TASK_STACK_SIZE, NULL, SENSOR_TASK_PRIORITY, &xSensorTaskHandle);
+    xTaskCreate(vBubbleLevelTask,   "BubbleLevelTask", BUBBLE_LEVEL_TASK_STACK_SIZE, NULL, BUBBLE_LEVEL_TASK_PRIORITY, &xBubbleLevelTaskHandle);
+    xTaskCreate(vDisplayTask,       "DisplayTask", DISPLAY_TASK_STACK_SIZE, NULL, DISPLAY_TASK_PRIORITY, &xDisplayTaskHandle);
     xTaskCreate(vUserInterfaceTask, "UserInterfaceTask", USER_INTERFACE_TASK_STACK_SIZE, NULL, USER_INTERFACE_TASK_PRIORITY, &xUserInterfaceTaskHandle);
-    xTaskCreate(vAlarmTask, "AlarmTask", ALARM_TASK_STACK_SIZE, NULL, ALARM_TASK_PRIORITY, &xAlarmTaskHandle);
-    xTaskCreate(vBuzzerTask, "BuzzerTask", BUZZER_TASK_STACK_SIZE, NULL, BUZZER_TASK_PRIORITY , &xBuzzerTaskHandle);
+    xTaskCreate(vAlarmTask,         "AlarmTask", ALARM_TASK_STACK_SIZE, NULL, ALARM_TASK_PRIORITY, &xAlarmTaskHandle);
+    xTaskCreate(vBuzzerTask,        "BuzzerTask", BUZZER_TASK_STACK_SIZE, NULL, BUZZER_TASK_PRIORITY , &xBuzzerTaskHandle);
 
 }
