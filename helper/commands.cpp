@@ -81,12 +81,14 @@ void cmd_rdt(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_sd(int argc, char **argv)
 {
-    printf("Selected sd -> this sets the date");
-    printf("Cmd> ");
-    scanf("%d %d %d", &current_time_tm.tm_mday, &current_time_tm.tm_mon, &current_time_tm.tm_year);
+    printf("Selected sd -> this sets the date\n");
+    if ( sscanf(argv[1],"%d", &current_time_tm.tm_mday) != 1 ){printf("Please insert day month year\n"); return;}
+    if ( sscanf(argv[2],"%d", &current_time_tm.tm_mon)  != 1 ){printf("Please insert day month year\n");  return;}
+    if ( sscanf(argv[3],"%d", &current_time_tm.tm_year) != 1 ){printf("Please insert day month year\n"); return;}
     current_time_tm.tm_mon -= 1; /*tm_mon vai de 0 a 11*/
     current_time_tm.tm_year -= 1900; /*tm_year é anos desde 1900*/
     current_time = mktime(&current_time_tm);
+    printf("Cmd> ");
 }
 
 /*-------------------------------------------------------------------------+
@@ -97,8 +99,15 @@ void cmd_rc(int argc, char **argv)
     printf("Selected rc -> this reads the clock?\n");
     printf("Here is my raw counter:\n");
     
-    printf("%d\n",current_time);
-    //printf("Cmd> ");
+    char buf[32];
+
+    snprintf(buf, sizeof(buf),
+             "%02d:%02d:%02d\n",
+             current_time_tm.tm_hour,
+             current_time_tm.tm_min,
+             current_time_tm.tm_sec);
+
+    printf("%s\n", buf);
 }
 
 /*-------------------------------------------------------------------------+
