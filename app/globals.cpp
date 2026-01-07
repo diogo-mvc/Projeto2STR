@@ -15,5 +15,5 @@ volatile bool clock_updated = false;
 
 int pmon = PMON;
 int tala = TALA;
-float tlow = TLOW ; 
-float thigh = THIGH ;
+float tlow = TLOW; 
+float thigh = THIGH;

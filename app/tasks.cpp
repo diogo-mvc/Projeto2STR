@@ -63,11 +63,26 @@ void vUserInterfaceTask(void *pvParameters) {
 }
 
 void vAlarmTask(void *pvParameters) {
+    time_t alarm_started_time = 0;
     for (;;) {
         if (clock_updated == true){ //spinlock
-            current_time_tm = clock_time_to_tm(current_time); 
+            current_time_tm = clock_time_to_tm(current_time);
             clock_updated = false;
         }
+
+        if (temp_alarm_flag || time_alarm_flag){
+            //buzzer_play();
+            /*alarm stated now*/
+            if (alarm_started_time == 0){alarm_started_time = current_time;}
+            
+            /*time to shut up*/
+            if (current_time - alarm_started_time >= tala){
+                //buzzer_shut_up();
+                alarm_started_time = 0;
+                temp_alarm_flag
+            }
+        }
+
         /*
         uint8_t msg;
         if (xQueueReceive(xBuzzerQueue, &msg, portMAX_DELAY) == pdPASS) {
@@ -90,4 +105,6 @@ void app_tasks_init(void) {
     xTaskCreate(vDisplayTask, "DisplayTask", DISPLAY_TASK_STACK_SIZE, NULL, DISPLAY_TASK_PRIORITY, &xDisplayTaskHandle);
     xTaskCreate(vUserInterfaceTask, "UserInterfaceTask", USER_INTERFACE_TASK_STACK_SIZE, NULL, USER_INTERFACE_TASK_PRIORITY, &xUserInterfaceTaskHandle);
     xTaskCreate(vAlarmTask, "AlarmTask", ALARM_TASK_STACK_SIZE, NULL, ALARM_TASK_PRIORITY, &xAlarmTaskHandle);
+    xTaskCreate(vBuzzerTask, "BuzzerTask", BUZZER_TASK_STACK_SIZE, NULL, BUZZER_TASK_PRIORITY , &xBuzzerTaskHandle);
+
 }

@@ -25,8 +25,8 @@ extern bool Bubble_enable , HitBit_enable;
 extern bool temp_alarm_flag , time_alarm_flag ;
 extern volatile bool clock_updated ;
 
-extern int pmon ;
-extern int tala ;
+extern int pmon;
+extern int tala;
 extern float tlow; 
 extern float thigh;
 

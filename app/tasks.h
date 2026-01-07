@@ -27,6 +27,9 @@
 #define ALARM_TASK_STACK_SIZE      256
 #define ALARM_TASK_PRIORITY        2
 
+#define BUZZER_TASK_STACK_SIZE 256
+#define BUZZER_TASK_PRIORITY    2
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -41,6 +44,7 @@ void vBubbleLevelTask(void *pvParameters);
 void vDisplayTask(void *pvParameters);
 void vUserInterfaceTask(void *pvParameters);
 void vAlarmTask(void *pvParameters);
+void vBuzzerTask(void *pvParameters);
 
 #ifdef __cplusplus
 }
