@@ -26,3 +26,5 @@ extern AnalogIn pot1;
 extern AnalogIn pot2;
 
 extern InterruptIn btnJoystick;  // Joystick center button
+
+#endif // PIN_DEFINITION_H

@@ -50,8 +50,6 @@ void vAlarmTask(void *pvParameters);
 void vBuzzerTask(void *pvParameters);
 void vHitBitTask(void *pvParameters);
 
-// Hit Bit game initialization
-void hitbit_init(void);
 
 #ifdef __cplusplus
 }
