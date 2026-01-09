@@ -6,7 +6,8 @@ void echo_cmd(int argc, char **argv)
 {
     int i;
     for (i=0; i<argc; i++)
-        printf ("\nargv[%d] = %s", i, argv[i])
+        printf("%s ", argv[i]);
+    printf("\n");
 }
 
 /*-------------------------------------------------------------------------+
@@ -14,6 +15,7 @@ void echo_cmd(int argc, char **argv)
 +--------------------------------------------------------------------------*/ 
 void cmd_sair (int argc, char **argv)
 {
+    echo_cmd(argc, argv);
     printf("Sair, não sei o que faz...\n");
     printf("Toma uma vaca...\n");
     printf("\n");
@@ -32,11 +34,12 @@ void cmd_sair (int argc, char **argv)
 +--------------------------------------------------------------------------*/ 
 void cmd_test (int argc, char** argv)
 {
-  int i;
+    echo_cmd(argc, argv);
+    int i;
 
-  /* exemplo -- escreve argumentos */
-  for (i=0; i<argc; i++)
-    printf ("\nargv[%d] = %s", i, argv[i]);
+    /* exemplo -- escreve argumentos */
+    for (i=0; i<argc; i++)
+        printf ("\nargv[%d] = %s", i, argv[i]);
 }
 
 /*-------------------------------------------------------------------------+
@@ -44,6 +47,7 @@ void cmd_test (int argc, char** argv)
 +--------------------------------------------------------------------------*/ 
 void cmd_send (int argc, char** argv)
 {
+    echo_cmd(argc, argv);
     int32_t lValueToSend;
     BaseType_t xStatus;
 
@@ -62,6 +66,7 @@ void cmd_send (int argc, char** argv)
 +--------------------------------------------------------------------------*/
 void cmd_rdt(int argc, char **argv)
 {
+    echo_cmd(argc, argv);
     printf("Selected rdt -> here is date and time\n");
 
     char buf[32];
@@ -83,6 +88,7 @@ void cmd_rdt(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_sd(int argc, char **argv)
 {   
+    echo_cmd(argc, argv);
     int intended_day, intended_month, intended_year;
     int max_day;
     printf("Selected sd -> this sets the date\n");
@@ -118,6 +124,7 @@ void cmd_sd(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_rc(int argc, char **argv)
 {
+    echo_cmd(argc, argv);
     printf("Selected rc -> this reads the clock?\n");
     printf("Here is my raw counter:\n");
     
@@ -137,6 +144,7 @@ void cmd_rc(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_sc(int argc, char **argv)
 {
+    echo_cmd(argc, argv);
     int intended_hours, intended_minutes, intended_seconds;
     printf("Selected sc -> this sets the clock\n");
 
@@ -165,7 +173,7 @@ void cmd_sc(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_rt(int argc, char **argv)
 {
-
+    echo_cmd(argc, argv);
     printf("rt -> read the temperature\n");
     xTaskNotify(xSensorTaskHandle, 0x10, eSetBits);
     printf("%f\n",temperature);
@@ -176,6 +184,7 @@ void cmd_rt(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_rmm(int argc, char **argv)
 {
+    echo_cmd(argc, argv);
     printf("Selected rmm -> read maximum and minimum of temperature\n");
     printf("Maximum : %f\n",temperature_max);
     printf("Minimum : %f\n",temperature_min);
@@ -186,6 +195,7 @@ void cmd_rmm(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_cmm(int argc, char **argv)
 {
+    echo_cmd(argc, argv);
     printf("Selected cmm -> clear maximum and minimum of temperature\n");
     temperature_max = -273.15; temperature_min = 15000000.0;
     printf("cleared!\n");
@@ -196,6 +206,7 @@ void cmd_cmm(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_rp(int argc, char **argv)
 {
+    echo_cmd(argc, argv);
     printf("Selected rp -> read pmon and tala\n");
     printf("PMON = %d\n",pmon);
     printf("TALA = %d\n",tala);
@@ -206,6 +217,7 @@ void cmd_rp(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_mmp(int argc, char **argv)
 {
+    echo_cmd(argc, argv);
     int new_pmon;
     new_pmon = atoi(argv[1]);
     printf("Selected mmp -> modify monitoring period\n");
@@ -226,6 +238,7 @@ void cmd_mmp(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_mta(int argc, char **argv)
 {
+    echo_cmd(argc, argv);
     int new_tala;
     new_tala = atoi(argv[1]);
     printf("Selected mta -> modify time alarm\n");
@@ -246,6 +259,7 @@ void cmd_mta(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_rai(int argc, char **argv)
 {
+    echo_cmd(argc, argv);
     printf("Selected rai -> read alarm info:\n");
     printf("Alarm Time : %02d:%02d:%02d\n",alarm_time_hours,alarm_time_minutes,alarm_time_seconds);
     printf("Temperature Low Threshold : %f\n",tlow); 
@@ -267,6 +281,7 @@ void cmd_rai(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_sac(int argc, char **argv)
 {
+    echo_cmd(argc, argv);
     int intended_hours, intended_minutes, intended_seconds;
     printf("Selected sac -> set alarm clock:\n");
     if (argc == 4) {
@@ -293,6 +308,7 @@ void cmd_sac(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_sat(int argc, char **argv)
 {
+    echo_cmd(argc, argv);
     int new_tlow, new_thigh;
     printf("Selected sat -> set alarm temperature thresholds:\n");
     if (argc == 3) {
@@ -319,6 +335,7 @@ void cmd_sat(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_adac(int argc, char **argv)
 {
+    echo_cmd(argc, argv);
     printf("Selected adac -> Setting alarm clock:\n");
     AlarmClock_enable = ! AlarmClock_enable;
     if(AlarmClock_enable == true)
@@ -335,6 +352,7 @@ void cmd_adac(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_adat(int argc, char **argv)
 {
+    echo_cmd(argc, argv);
     printf("Selected adat -> Setting alarm temperature:\n");
     AlarmTemp_enable = ! AlarmTemp_enable;
     if(AlarmTemp_enable == true)
@@ -351,6 +369,7 @@ void cmd_adat(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_rts(int argc, char **argv)
 {
+    echo_cmd(argc, argv);
     printf("Selected rts -> read task state\n");
     printf("Bubble Level : ");
     if(Bubble_enable == true){printf("enabled\n");}else{printf("disabled\n");}
@@ -365,6 +384,7 @@ void cmd_rts(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_adbl(int argc, char **argv)
 {
+    echo_cmd(argc, argv);
     printf("Selected adbl -> toggle state of Bubble level\n");
     Bubble_enable = !Bubble_enable;
     printf("Toggled!\n");
@@ -377,6 +397,7 @@ void cmd_adbl(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_adhb(int argc, char **argv)
 {
+    echo_cmd(argc, argv);
     printf("Selected adhb -> toggle state of Hitbit game\n");
     HitBit_enable = !HitBit_enable;
     printf("Toggled!\n");
@@ -394,6 +415,7 @@ void cmd_adhb(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_adcs(int argc, char **argv)
 {
+    echo_cmd(argc, argv);
     printf("Selected adcs -> toggle state of Config Sound\n");
     ConfigSound.enable = !ConfigSound.enable;
     printf("Toggled!\n");
