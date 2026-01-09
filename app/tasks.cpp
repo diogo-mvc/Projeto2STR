@@ -17,15 +17,27 @@ TaskHandle_t xAlarmTaskHandle         = NULL;
 TaskHandle_t xBuzzerTaskHandle        = NULL;
 
 void vSensorTask(void *pvParameters) {
-    for (;;) {
-        // Read sensor, process data
-        temperature = sensor_read_temperature();
-        if (temperature > temperature_max){temperature_max = temperature;}
-        if (temperature < temperature_min){temperature_min = temperature;}
 
-        if ( (temperature > thigh) || (temperature < tlow) ){ temp_alarm_flag = true; }
+    uint32_t ulNotificationValue = 0;
+    for(;;){
+        xTaskNotifyWait(
+            0x00,                   // Don’t clear on entry
+            0x10, // Clear these on exit
+            &ulNotificationValue,
+            portMAX_DELAY
+        );
 
-        displayRGB(temperature);
+        if (ulNotificationValue & 0x10)
+        {
+            // Read sensor, process data
+            temperature = sensor_read_temperature();
+            if (temperature > temperature_max){temperature_max = temperature;}
+            if (temperature < temperature_min){temperature_min = temperature;}
+            if ( (temperature > thigh) || (temperature < tlow) ){ temp_alarm_flag = true; }
+            displayRGB(temperature);
+        }  
+
+        
 
         //xSemaphoreTake(xPrintMutex, portMAX_DELAY);
         //printf("Temperature : %f\n",temperature);
@@ -33,7 +45,7 @@ void vSensorTask(void *pvParameters) {
         //printf("Gx: %f Gy: %f Gz: %f\n",gravity_x,gravity_y,gravity_z);
         //xSemaphoreGive(xPrintMutex);
 
-        vTaskDelay(pdMS_TO_TICKS(2000));
+        //vTaskDelay(pdMS_TO_TICKS(20));
     }
 }
 
@@ -67,6 +79,7 @@ void vUserInterfaceTask(void *pvParameters) {
     }
 }
 
+/*mudar isto para o RTC dar o alarme*/
 void vAlarmTask(void *pvParameters) {
     time_t alarm_started_time = 0;
     for (;;) {
@@ -74,6 +87,8 @@ void vAlarmTask(void *pvParameters) {
             current_time_tm = clock_time_to_tm(current_time);
             clock_updated = false;
         }
+
+        if( ((int)current_time % pmon == 0 )||(pmon == 0) ){xTaskNotify(xSensorTaskHandle, 0x10, eSetBits);}
 
         if (temp_alarm_flag || time_alarm_flag){
             //play buzzer

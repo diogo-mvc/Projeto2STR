@@ -18,6 +18,9 @@ PwmOut g (p24);
 PwmOut b (p25);
 PwmOut buzzer (p26);
 
+AnalogIn pot1(p19);
+AnalogIn pot2(p20);
+
 
 int main() 
 {

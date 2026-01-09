@@ -126,9 +126,9 @@ void cmd_sc(int argc, char **argv)
 void cmd_rt(int argc, char **argv)
 {
     printf("rt -> read the temperature\n");
+    xTaskNotify(xSensorTaskHandle, 0x10, eSetBits);
     printf("%f\n",temperature);
     //printf("Cmd> ");
-
 }
 
 /*-------------------------------------------------------------------------+

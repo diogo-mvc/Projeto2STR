@@ -2,6 +2,9 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
+#include "FreeRTOS.h"
+#include "task.h"
+
 #include <ctime>
 #include "../drivers/clock.h" /*to have access to tm struct, otherwise I cannot change inside it*/
 #include "../helper/config.h"
@@ -34,5 +37,8 @@ extern int pmon;
 extern int tala;
 extern float tlow; 
 extern float thigh;
+
+extern TaskHandle_t xSensorTaskHandle;
+
 
 #endif //GLOBALS_H
