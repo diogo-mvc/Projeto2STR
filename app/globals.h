@@ -41,4 +41,9 @@ extern float thigh;
 extern TaskHandle_t xSensorTaskHandle;
 
 
+// Hit Bit game globals
+extern volatile uint8_t hitbit_current_pattern;   // Current bit pattern (bits 0-3 for LEDs)
+extern volatile uint8_t hitbit_button_pressed;    // Flag indicating button was pressed
+extern volatile bool hitbit_rotating;             // Whether bits are currently rotating
+
 #endif //GLOBALS_H

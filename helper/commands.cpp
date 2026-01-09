@@ -72,23 +72,41 @@ void cmd_rdt(int argc, char **argv)
              current_time_tm.tm_sec);
 
     printf("%s\n", buf);
-    //printf("Cmd> ");
-
 }
 
 /*-------------------------------------------------------------------------+
 | Function: cmd_sd - set date (day, month, year)
 +--------------------------------------------------------------------------*/
 void cmd_sd(int argc, char **argv)
-{
+{   
+    int intended_day, intended_month, intended_year;
+    int max_day;
     printf("Selected sd -> this sets the date\n");
-    if ( sscanf(argv[1],"%d", &current_time_tm.tm_mday) != 1 ){printf("Please insert day month year\n"); return;}
-    if ( sscanf(argv[2],"%d", &current_time_tm.tm_mon)  != 1 ){printf("Please insert day month year\n");  return;}
-    if ( sscanf(argv[3],"%d", &current_time_tm.tm_year) != 1 ){printf("Please insert day month year\n"); return;}
-    current_time_tm.tm_mon -= 1; /*tm_mon vai de 0 a 11*/
-    current_time_tm.tm_year -= 1900; /*tm_year é anos desde 1900*/
-    current_time = mktime(&current_time_tm);
-    printf("Cmd> ");
+    
+    if (argc == 4) {
+        intended_day = atoi(argv[1]);
+        intended_month = atoi(argv[2]);
+        intended_year = atoi(argv[3]);
+
+        if (intended_day < 1 || intended_day > 31 || intended_month < 1 || intended_month > 12 || intended_year < 1970 || intended_year > 2037) {
+           printf("Invalid date! Your date is out of range\n");
+        
+        } else {
+            max_day = get_days_in_month(intended_month, intended_year);
+            if (intended_day > max_day) {
+                printf("Invalid date! Day exceeds maximum for the month\n");
+            } else {
+                current_time_tm.tm_mday = intended_day;
+                current_time_tm.tm_mon = intended_month - 1; // tm_mon is 0-11
+                current_time_tm.tm_year = intended_year - 1900; // tm_year is years since 1900
+                current_time = clock_tm_to_time(&current_time_tm);
+                printf("Date set successfully!\n");
+            }
+        }
+    
+    } else {
+        printf("Wrong number of arguments! Usage: sd <day> <month> <year>\n");
+    }
 }
 
 /*-------------------------------------------------------------------------+
@@ -115,9 +133,27 @@ void cmd_rc(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_sc(int argc, char **argv)
 {
-    printf("This sets the clock\n");
-    //printf("Cmd> ");
+    int intended_hours, intended_minutes, intended_seconds;
+    printf("Selected sc -> this sets the clock\n");
 
+    if (argc == 4) {
+        intended_hours = atoi(argv[1]);
+        intended_minutes = atoi(argv[2]);
+        intended_seconds = atoi(argv[3]);
+
+        if (intended_hours < 0 || intended_hours > 23 || intended_minutes < 0 || intended_minutes > 59 || intended_seconds < 0 || intended_seconds > 59){
+           printf("Invalid time! Your time is out of range\n");
+        } else {
+            current_time_tm.tm_hour = intended_hours;
+            current_time_tm.tm_min = intended_minutes;
+            current_time_tm.tm_sec = intended_seconds;
+            current_time = clock_tm_to_time(&current_time_tm);
+            printf("Time set successfully!\n");
+        }
+    
+    } else {
+        printf("Wrong number of arguments! Usage: sc <hours> <minutes> <seconds>\n");
+    }
 }
 
 /*-------------------------------------------------------------------------+
@@ -125,10 +161,14 @@ void cmd_sc(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_rt(int argc, char **argv)
 {
+
     printf("rt -> read the temperature\n");
     xTaskNotify(xSensorTaskHandle, 0x10, eSetBits);
     printf("%f\n",temperature);
     //printf("Cmd> ");
+
+    printf("Selected rt -> read the temperature\n");
+    printf("%f\n",temperature);
 }
 
 /*-------------------------------------------------------------------------+
@@ -136,12 +176,9 @@ void cmd_rt(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_rmm(int argc, char **argv)
 {
-    printf("rmm -> read maximum and minimum of temperature\n");
+    printf("Selected rmm -> read maximum and minimum of temperature\n");
     printf("Maximum : %f\n",temperature_max);
     printf("Minimum : %f\n",temperature_min);
-    printf("\n");
-    //printf("Cmd> ");
-
 }
 
 /*-------------------------------------------------------------------------+
@@ -149,12 +186,9 @@ void cmd_rmm(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_cmm(int argc, char **argv)
 {
-    printf("cmm -> clear maximum and minimum of temperature\n");
+    printf("Selected cmm -> clear maximum and minimum of temperature\n");
     temperature_max = -273.15; temperature_min = 15000000.0;
     printf("cleared!\n");
-    printf("\n");
-    //printf("Cmd> ");
-
 }
 
 /*-------------------------------------------------------------------------+
@@ -162,10 +196,9 @@ void cmd_cmm(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_rp(int argc, char **argv)
 {
-    printf("Reading parameters:\n");
+    printf("Selected rp -> read pmon and tala\n");
     printf("PMON = %d\n",pmon);
     printf("TALA = %d\n",tala);
-    //printf("Cmd> ");
 }
 
 /*-------------------------------------------------------------------------+
@@ -173,8 +206,19 @@ void cmd_rp(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_mmp(int argc, char **argv)
 {
-    printf("Monitoring period changed to:\n");
-    printf("PMON = %d\n",argv[1]);
+    int new_pmon;
+    new_pmon = atoi(argv[1]);
+    printf("Selected mmp -> modify monitoring period\n");
+    if (argc == 2) {
+        if (new_pmon < 0 || new_pmon > 99) {
+            printf("Invalid monitoring period! It must be between 0 and 99.\n");
+            return;
+        }
+        pmon = new_pmon;
+        printf("PMON = %d\n",pmon);
+    } else {
+        printf("Wrong number of arguments! Usage: mmp <seconds>\n");
+    }
 }
 
 /*-------------------------------------------------------------------------+
@@ -182,8 +226,19 @@ void cmd_mmp(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_mta(int argc, char **argv)
 {
-    printf("Time alarm changed to:\n");
-    printf("TALA = %d\n",argv[1]);
+    int new_tala;
+    new_tala = atoi(argv[1]);
+    printf("Selected mta -> modify time alarm\n");
+    if (argc == 2) {
+        if (new_tala < 0 || new_tala > 60) {
+            printf("Invalid time alarm! It must be between 0 and 60 seconds.\n");
+            return;
+        }
+        tala = new_tala;
+        printf("TALA = %d\n",tala);
+    } else {
+        printf("Wrong number of arguments! Usage: mta <seconds>\n");
+    } 
 }
 
 /*-------------------------------------------------------------------------+
@@ -191,7 +246,7 @@ void cmd_mta(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_rai(int argc, char **argv)
 {
-    printf("Reading alarm info:\n");
+    printf("Selected rai -> read alarm info:\n");
     printf("Alarm Time : %02d:%02d:%02d\n",alarm_time_hours,alarm_time_minutes,alarm_time_seconds);
     printf("Temperature Low Threshold : %f\n",tlow); 
     printf("Temperature High Threshold : %f\n",thigh);
@@ -205,8 +260,6 @@ void cmd_rai(int argc, char **argv)
     }
     printf("Alarm Temperature : ");
     if(AlarmTemp_enable == true){printf("enabled\n");}else{printf("disabled\n");}
-    //printf("Cmd> ");
-
 }
 
 /*-------------------------------------------------------------------------+
@@ -214,14 +267,24 @@ void cmd_rai(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_sac(int argc, char **argv)
 {
-    printf("Setting alarm clock:\n");
-    printf("Enter hours, minutes, seconds:\n");
-    scanf("%d %d %d", &alarm_time_hours, &alarm_time_minutes, &alarm_time_seconds);
-    if (alarm_time_hours <0 || alarm_time_hours >23 || alarm_time_minutes <0 || alarm_time_minutes >59 || alarm_time_seconds <0 || alarm_time_seconds >59)
-    {
-        printf("Invalid time! Please enter a valid time.\n");
-        /*reset to default*/
-        alarm_time_hours = 0; alarm_time_minutes = 0; alarm_time_seconds = 0;
+    int intended_hours, intended_minutes, intended_seconds;
+    printf("Selected sac -> set alarm clock:\n");
+    if (argc == 4) {
+        intended_hours = atoi(argv[1]);
+        intended_minutes = atoi(argv[2]);
+        intended_seconds = atoi(argv[3]);
+
+        if (intended_hours < 0 || intended_hours > 23 || intended_minutes < 0 || intended_minutes > 59 || intended_seconds < 0 || intended_seconds > 59){
+           printf("Invalid time! Your time is out of range\n");
+        } else {
+            alarm_time_hours = intended_hours;
+            alarm_time_minutes = intended_minutes;
+            alarm_time_seconds = intended_seconds;
+            printf("Alarm time set successfully!:%02d:%02d:%02d\n",alarm_time_hours,alarm_time_minutes,alarm_time_seconds);
+        }
+    
+    } else {
+        printf("Wrong number of arguments! Usage: sac <hours> <minutes> <seconds>\n");
     }
 }
 
@@ -230,9 +293,25 @@ void cmd_sac(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_sat(int argc, char **argv)
 {
-    printf("Setting alarm temperature thresholds:\n");
-    //printf("Cmd> ");
+    int new_tlow, new_thigh;
+    printf("Selected sat -> set alarm temperature thresholds:\n");
+    if (argc == 3) {
+        new_tlow = atoi(argv[1]);
+        new_thigh = atoi(argv[2]);
 
+        if (new_tlow < 0 || new_tlow > 50 || new_thigh < 0 || new_thigh > 50 || new_tlow >= new_thigh){
+           printf("Invalid temperature thresholds! They must be between 0 and 50, and tlow must be less than thigh.\n");
+        } else {
+            tlow = new_tlow;
+            thigh = new_thigh;
+            printf("Temperature thresholds set successfully!\n");
+            printf("tlow = %f\n", tlow);
+            printf("thigh = %f\n", thigh);
+        }
+    
+    } else {
+        printf("Wrong number of arguments! Usage: sat <tlow> <thigh>\n");
+    }
 }
 
 /*-------------------------------------------------------------------------+
@@ -240,7 +319,7 @@ void cmd_sat(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_adac(int argc, char **argv)
 {
-    printf("Setting alarm clock:\n");
+    printf("Selected adac -> Setting alarm clock:\n");
     AlarmClock_enable = ! AlarmClock_enable;
     if(AlarmClock_enable == true)
     {
@@ -249,7 +328,6 @@ void cmd_adac(int argc, char **argv)
     {
         printf("disabled\n");
     }
-    //printf("Cmd> ");
 }
 
 /*-------------------------------------------------------------------------+
@@ -257,7 +335,7 @@ void cmd_adac(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_adat(int argc, char **argv)
 {
-    printf("Setting alarm temperature:\n");
+    printf("Selected adat -> Setting alarm temperature:\n");
     AlarmTemp_enable = ! AlarmTemp_enable;
     if(AlarmTemp_enable == true)
     {
@@ -266,7 +344,6 @@ void cmd_adat(int argc, char **argv)
     {
         printf("disabled\n");
     }
-    //printf("Cmd> ");
 }
 
 /*-------------------------------------------------------------------------+
@@ -274,15 +351,13 @@ void cmd_adat(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_rts(int argc, char **argv)
 {
-    printf("rts -> read task state\n");
+    printf("Selected rts -> read task state\n");
     printf("Bubble Level : ");
     if(Bubble_enable == true){printf("enabled\n");}else{printf("disabled\n");}
     printf("Hit Bit Game :");
     if(HitBit_enable == true){printf("enabled\n");}else{printf("disabled\n");}
     printf("Config Sound :");
     if(ConfigSound.enable == true){printf("enabled\n");}else{printf("disabled\n");}
-    //printf("\nCmd> ");
-
 }
 
 /*-------------------------------------------------------------------------+
@@ -290,13 +365,11 @@ void cmd_rts(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_adbl(int argc, char **argv)
 {
-    printf("adbl -> toggle state of Bubble level\n");
+    printf("Selected adbl -> toggle state of Bubble level\n");
     Bubble_enable = !Bubble_enable;
     printf("Toggled!\n");
     printf("Bubble Level : ");
     if(Bubble_enable == true){printf("enabled\n");}else{printf("disabled\n");}
-    //printf("\nCmd> ");
-
 }
 
 /*-------------------------------------------------------------------------+
@@ -304,13 +377,16 @@ void cmd_adbl(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_adhb(int argc, char **argv)
 {
-    printf("adhb -> toggle state of Hitbit game\n");
+    printf("Selected adhb -> toggle state of Hitbit game\n");
     HitBit_enable = !HitBit_enable;
     printf("Toggled!\n");
     printf("Hit Bit Game :");
-    if(HitBit_enable == true){printf("enabled\n");}else{printf("disabled\n");}
-    //printf("\nCmd> ");
-
+    if(HitBit_enable == true)
+    {
+        printf("enabled\n");
+    }else{
+        printf("disabled\n");
+    }
 }
 
 /*-------------------------------------------------------------------------+
@@ -318,12 +394,10 @@ void cmd_adhb(int argc, char **argv)
 +--------------------------------------------------------------------------*/
 void cmd_adcs(int argc, char **argv)
 {
-    printf("adcs -> toggle state of Config Sound\n");
+    printf("Selected adcs -> toggle state of Config Sound\n");
     ConfigSound.enable = !ConfigSound.enable;
     printf("Toggled!\n");
     printf("Config Sound :");
     if(ConfigSound.enable == true){printf("enabled\n");}else{printf("disabled\n");}
-    //printf("\nCmd> ");
-
 }
 

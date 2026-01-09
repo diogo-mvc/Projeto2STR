@@ -21,6 +21,8 @@ PwmOut buzzer (p26);
 AnalogIn pot1(p19);
 AnalogIn pot2(p20);
 
+InterruptIn btnJoystick(p9);  // Joystick center button
+
 
 int main() 
 {

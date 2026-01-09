@@ -22,3 +22,9 @@ int pmon = PMON;
 int tala = TALA;
 float tlow = TLOW; 
 float thigh = THIGH;
+
+
+// Hit Bit game globals
+volatile uint8_t hitbit_current_pattern = 0x00;   // Start with no bits
+volatile uint8_t hitbit_button_pressed = 0;       // Button not pressed
+volatile bool hitbit_rotating = true;              // Start rotating
