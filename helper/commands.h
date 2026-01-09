@@ -17,6 +17,8 @@
 
 extern QueueHandle_t xQueue_send;
 
+void echo_cmd(int argc, char **argv);
+
 void cmd_sair(int argc, char **argv);
 void cmd_test(int argc, char **argv);
 void cmd_send(int argc, char **argv);

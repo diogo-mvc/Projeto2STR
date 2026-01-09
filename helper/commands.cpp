@@ -2,6 +2,13 @@
 
 QueueHandle_t xQueue_send; /*sem isto aqui o extern dá erro*/
 
+void echo_cmd(int argc, char **argv)
+{
+    int i;
+    for (i=0; i<argc; i++)
+        printf ("\nargv[%d] = %s", i, argv[i])
+}
+
 /*-------------------------------------------------------------------------+
 | Function: cmd_sair - termina a aplicacao
 +--------------------------------------------------------------------------*/ 
@@ -17,7 +24,6 @@ void cmd_sair (int argc, char **argv)
     printf("     *  /\\---/\\      \n");
     printf("        ~~   ~~      \n");
     printf("\n");
-    //printf("Cmd> ");
 //  exit(0);
 }
 
@@ -31,7 +37,6 @@ void cmd_test (int argc, char** argv)
   /* exemplo -- escreve argumentos */
   for (i=0; i<argc; i++)
     printf ("\nargv[%d] = %s", i, argv[i]);
-    //printf("Cmd> ");
 }
 
 /*-------------------------------------------------------------------------+
@@ -50,7 +55,6 @@ void cmd_send (int argc, char** argv)
     else {
         printf ("wrong number of arguments!\n");
     }
-    //printf("Cmd> ");
 }
 
 /*-------------------------------------------------------------------------+
@@ -164,10 +168,6 @@ void cmd_rt(int argc, char **argv)
 
     printf("rt -> read the temperature\n");
     xTaskNotify(xSensorTaskHandle, 0x10, eSetBits);
-    printf("%f\n",temperature);
-    //printf("Cmd> ");
-
-    printf("Selected rt -> read the temperature\n");
     printf("%f\n",temperature);
 }
 

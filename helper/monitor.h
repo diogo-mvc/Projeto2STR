@@ -58,7 +58,7 @@ struct  command_d {
 
 
 #define NCOMMANDS  (sizeof(commands)/sizeof(struct command_d))
-#define ARGVECSIZE 3
+#define ARGVECSIZE 4
 #define MAX_LINE   50
 
 
