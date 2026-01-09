@@ -146,7 +146,6 @@ void vBuzzerTask(void *Parameters){
 }
 
 void vHitBitTask(void *Parameters){
-    uint8_t rotating_led_pos = 0;     // Position of the rotating bit (0-3 for LED1-LED4)
     uint32_t rotation_speed_ms = 200; // Time between LED rotation
     TickType_t xLastWakeTime;
     
@@ -166,25 +165,12 @@ void vHitBitTask(void *Parameters){
         
         // Normal game operation - rotate the bit through LED positions
         if (hitbit_rotating) {
-            // Create a rotating pattern - one LED is ON at a time, rotating through positions
-            uint8_t rotating_pattern = (1 << rotating_led_pos);
+            // Show the accumulated pattern (bits that have been hit)
+            // The rotating cursor will be added by the interrupt when button is pressed
+            hitbit_display_leds(hitbit_current_pattern);
             
-            // Combine the rotating pattern with the game pattern
-            // The rotating LED shows where to hit (rotates through all positions)
-            // The game pattern shows accumulated hits
-            uint8_t display_pattern = rotating_pattern;
-            
-            // Display the rotating LED to show the "target" position
-            hitbit_display_leds(display_pattern);
-            
-            // Also show the accumulated bits but less brightly (not actually less bright in digital, 
-            // but the logic is that the rotating LED is the main indicator)
-            
-            // Rotate to next position
+            // Rotate to next position for next iteration
             rotating_led_pos = (rotating_led_pos + 1) % 4;
-            
-            // Clear button press flag from previous interrupt
-            hitbit_button_pressed = 0;
             
             vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(rotation_speed_ms));
         } else {
