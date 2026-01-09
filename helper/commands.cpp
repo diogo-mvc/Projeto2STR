@@ -308,7 +308,12 @@ void cmd_adhb(int argc, char **argv)
     HitBit_enable = !HitBit_enable;
     printf("Toggled!\n");
     printf("Hit Bit Game :");
-    if(HitBit_enable == true){printf("enabled\n");}else{printf("disabled\n");}
+    if(HitBit_enable == true)
+    {
+        printf("enabled\n");
+    }else{
+        printf("disabled\n");
+    }
     //printf("\nCmd> ");
 
 }

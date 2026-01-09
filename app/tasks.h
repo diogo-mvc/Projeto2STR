@@ -30,6 +30,9 @@
 #define BUZZER_TASK_STACK_SIZE 256
 #define BUZZER_TASK_PRIORITY    2
 
+#define HITBIT_TASK_STACK_SIZE 256
+#define HITBIT_TASK_PRIORITY    2
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -38,13 +41,17 @@ extern "C" {
 // Initialize all application tasks
 void app_tasks_init(void);
 
-// Example: Task function prototypes
+// Example task function prototypes
 void vSensorTask(void *pvParameters);
 void vBubbleLevelTask(void *pvParameters);
 void vDisplayTask(void *pvParameters);
 void vUserInterfaceTask(void *pvParameters);
 void vAlarmTask(void *pvParameters);
 void vBuzzerTask(void *pvParameters);
+void vHitBitTask(void *pvParameters);
+
+// Hit Bit game initialization
+void hitbit_init(void);
 
 #ifdef __cplusplus
 }
