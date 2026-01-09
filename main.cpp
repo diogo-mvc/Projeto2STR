@@ -18,6 +18,8 @@ PwmOut g (p24);
 PwmOut b (p25);
 PwmOut buzzer (p26);
 
+InterruptIn btnJoystick(p9);  // Joystick center button
+
 
 int main() 
 {

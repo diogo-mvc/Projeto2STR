@@ -25,6 +25,4 @@ extern PwmOut buzzer;
 extern AnalogIn pot1;
 extern AnalogIn pot2;
 
-
-
-#endif // PIN_DEFINITION_H
+extern InterruptIn btnJoystick;  // Joystick center button
