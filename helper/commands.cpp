@@ -54,7 +54,7 @@ void cmd_send (int argc, char** argv)
     if (argc == 2) {
         printf ("msg: %s\n", argv[1]);
         lValueToSend = atoi(argv[1]);
-        xStatus = xQueueSend( xQueue_send, &lValueToSend, 0 );
+        //xStatus = xQueueSend( xQueue_send, &lValueToSend, 0 );
     }
     else {
         printf ("wrong number of arguments!\n");

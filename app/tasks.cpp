@@ -270,5 +270,5 @@ void app_tasks_init(void) {
     xTaskCreate(vUserInterfaceTask, "UserInterfaceTask", USER_INTERFACE_TASK_STACK_SIZE, NULL, USER_INTERFACE_TASK_PRIORITY, &xUserInterfaceTaskHandle);
     xTaskCreate(vAlarmTask,         "AlarmTask", ALARM_TASK_STACK_SIZE, NULL, ALARM_TASK_PRIORITY, &xAlarmTaskHandle);
     xTaskCreate(vBuzzerTask,        "BuzzerTask", BUZZER_TASK_STACK_SIZE, NULL, BUZZER_TASK_PRIORITY , &xBuzzerTaskHandle);
-    xTaskCreate(vHitBitTask,       "HitBitTask", HITBIT_TASK_STACK_SIZE, NULL, HITBIT_TASK_PRIORITY , &xHitBitTaskHandle);
+    //xTaskCreate(vHitBitTask,       "HitBitTask", HITBIT_TASK_STACK_SIZE, NULL, HITBIT_TASK_PRIORITY , &xHitBitTaskHandle);
 }
