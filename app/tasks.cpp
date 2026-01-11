@@ -145,48 +145,83 @@ void vBuzzerTask(void *Parameters){
     }
 }
 
-void vHitBitTask(void *Parameters){
-    uint32_t rotation_speed_ms = 200; // Time between LED rotation
-    TickType_t xLastWakeTime;
-    
-    // Initialize the game when task starts
-    hitbit_init();
-    
-    xLastWakeTime = xTaskGetTickCount();
-    
-    for(;;){
-        // Check if game should be running
-        if (!HitBit_enable) {
-            // Game disabled - turn off all LEDs
-            hitbit_display_leds(0x00);
+void vHitBitTask(void *Parameters)
+{
+    const TickType_t rotation_period = pdMS_TO_TICKS(200);
+
+    // init after the task starts, pass our task handle so ISR can notify us
+    hitbit_init(xTaskGetCurrentTaskHandle());
+
+    bool wasEnabled = false;
+
+    for (;;)
+    {
+        if (!HitBit_enable)
+        {
+            // If just got disabled, clear LEDs
+            if (wasEnabled)
+            {
+                hitbit_display_leds(0x00);
+                wasEnabled = false;
+            }
             vTaskDelay(pdMS_TO_TICKS(100));
             continue;
         }
-        
-        // Normal game operation - rotate the bit through LED positions
-        if (hitbit_rotating) {
-            // Show the accumulated pattern (bits that have been hit)
-            // The rotating cursor will be added by the interrupt when button is pressed
-            hitbit_display_leds(hitbit_current_pattern);
-            
-            // Rotate to next position for next iteration
-            rotating_led_pos = (rotating_led_pos + 1) % 4;
-            
-            vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(rotation_speed_ms));
-        } else {
-            // Win condition detected - blink all LEDs 3 times
-            hitbit_blink_leds_win();
-            
-            // Reset game after win
-            hitbit_current_pattern = 0x00;
-            hitbit_button_pressed = 0;
-            hitbit_rotating = true;
-            rotating_led_pos = 0;
-            
-            xLastWakeTime = xTaskGetTickCount();
+        wasEnabled = true;
+
+        // Wait for either:
+        // - button press notification, OR
+        // - timeout to rotate
+        uint32_t notif = 0;
+        BaseType_t gotNotif = xTaskNotifyWait(
+            0x00,                 // don't clear on entry
+            HITBIT_NOTIFY_BTN,    // clear these bits on exit
+            &notif,
+            rotation_period       // timeout = rotation tick
+        );
+
+        // Timeout -> rotate pattern and show it
+        if (gotNotif == pdFALSE)
+        {
+            if (hitbit_rotating)
+            {
+                hitbit_current_pattern = hitbit_rotate_left(hitbit_current_pattern);
+                hitbit_display_leds(hitbit_current_pattern);
+            }
+        }
+
+        // Button pressed -> “hit” on LED4: toggle bit3
+        if (notif & HITBIT_NOTIFY_BTN)
+        {
+            if (hitbit_rotating)
+            {
+                hitbit_current_pattern = hitbit_toggle_led4(hitbit_current_pattern);
+                hitbit_display_leds(hitbit_current_pattern);
+
+                // WIN: all bits cleared
+                if ((hitbit_current_pattern & 0x0F) == 0x00)
+                {
+                    hitbit_rotating = false;
+
+                    // Blink all LEDs 3 times (WIN signal)
+                    for (int i = 0; i < 3; i++)
+                    {
+                        hitbit_display_leds(0x0F);
+                        vTaskDelay(pdMS_TO_TICKS(200));
+                        hitbit_display_leds(0x00);
+                        vTaskDelay(pdMS_TO_TICKS(200));
+                    }
+
+                    // Reset game
+                    hitbit_current_pattern = 0x0F;
+                    hitbit_rotating = true;
+                    hitbit_display_leds(hitbit_current_pattern);
+                }
+            }
         }
     }
 }
+
 
 // Task creation and initialization
 void app_tasks_init(void) {
