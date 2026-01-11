@@ -148,79 +148,114 @@ void vBuzzerTask(void *Parameters){
 void vHitBitTask(void *Parameters)
 {
     const TickType_t rotation_period = pdMS_TO_TICKS(200);
-
-    // init after the task starts, pass our task handle so ISR can notify us
-    hitbit_init(xTaskGetCurrentTaskHandle());
+    const TickType_t debounce_ticks  = pdMS_TO_TICKS(150);
 
     bool wasEnabled = false;
 
+    // Game state lives here (not in ISR, not in globals)
+    uint8_t pattern = 0x0F;
+
+    TickType_t lastPressTick = 0;
+
     for (;;)
     {
+        // ---- Disabled state ----
         if (!HitBit_enable)
         {
-            // If just got disabled, clear LEDs
             if (wasEnabled)
             {
-                hitbit_display_leds(0x00);
+                // Stop reacting to button presses when disabled
+                hitbit_detach();
+
+                // Turn off LEDs immediately
+                hitbit_leds_write(0x00);
+
+                // Clear any pending notifications
+                uint32_t dump = 0;
+                (void)xTaskNotifyWait(0x00, 0xFFFFFFFF, &dump, 0);
+
                 wasEnabled = false;
             }
+
             vTaskDelay(pdMS_TO_TICKS(100));
             continue;
         }
-        wasEnabled = true;
 
-        // Wait for either:
-        // - button press notification, OR
-        // - timeout to rotate
-        uint32_t notif = 0;
-        BaseType_t gotNotif = xTaskNotifyWait(
-            0x00,                 // don't clear on entry
-            HITBIT_NOTIFY_BTN,    // clear these bits on exit
-            &notif,
-            rotation_period       // timeout = rotation tick
-        );
-
-        // Timeout -> rotate pattern and show it
-        if (gotNotif == pdFALSE)
+        // ---- Transition: disabled -> enabled ----
+        if (!wasEnabled)
         {
-            if (hitbit_rotating)
-            {
-                hitbit_current_pattern = hitbit_rotate_left(hitbit_current_pattern);
-                hitbit_display_leds(hitbit_current_pattern);
+            wasEnabled = true;
+
+            // Attach ISR notifications for this task
+            hitbit_attach(xTaskGetCurrentTaskHandle());
+
+            // Initialize a non-zero pattern so something is visible immediately.
+            // Using tick count adds variation but remains deterministic enough.
+            pattern = (uint8_t)(xTaskGetTickCount() & 0x0F);
+            if (pattern == 0x00) {
+                pattern = 0x0F;
             }
+
+            hitbit_leds_write(pattern);
+
+            lastPressTick = 0;
+
+            // Clear any pending notifications from before enable
+            uint32_t dump = 0;
+            (void)xTaskNotifyWait(0x00, 0xFFFFFFFF, &dump, 0);
         }
 
-        // Button pressed -> “hit” on LED4: toggle bit3
-        if (notif & HITBIT_NOTIFY_BTN)
+        // ---- Enabled gameplay ----
+        uint32_t notif = 0;
+        BaseType_t gotNotif = xTaskNotifyWait(
+            0x00,               // don't clear on entry
+            HITBIT_NOTIFY_BTN,  // clear this bit on exit
+            &notif,
+            rotation_period     // timeout = rotation tick
+        );
+
+        if (gotNotif == pdTRUE && (notif & HITBIT_NOTIFY_BTN))
         {
-            if (hitbit_rotating)
+            // Debounce (ignore repeated edges close together)
+            TickType_t now = xTaskGetTickCount();
+            if ((now - lastPressTick) >= debounce_ticks)
             {
-                hitbit_current_pattern = hitbit_toggle_led4(hitbit_current_pattern);
-                hitbit_display_leds(hitbit_current_pattern);
+                lastPressTick = now;
+
+                // "Hit" affects LED4 bit only (toggle bit3)
+                pattern = hitbit_toggle_led4(pattern);
+                hitbit_leds_write(pattern);
 
                 // WIN: all bits cleared
-                if ((hitbit_current_pattern & 0x0F) == 0x00)
+                if ((pattern & 0x0F) == 0x00)
                 {
-                    hitbit_rotating = false;
-
-                    // Blink all LEDs 3 times (WIN signal)
+                    // Blink all 4 LEDs 3 times
                     for (int i = 0; i < 3; i++)
                     {
-                        hitbit_display_leds(0x0F);
+                        // If user disables while blinking, abort quickly
+                        if (!HitBit_enable) break;
+
+                        hitbit_leds_write(0x0F);
                         vTaskDelay(pdMS_TO_TICKS(200));
-                        hitbit_display_leds(0x00);
+                        hitbit_leds_write(0x00);
                         vTaskDelay(pdMS_TO_TICKS(200));
                     }
 
-                    // Reset game
-                    hitbit_current_pattern = 0x0F;
-                    hitbit_rotating = true;
-                    hitbit_display_leds(hitbit_current_pattern);
+                    // Reset the game after win
+                    pattern = 0x0F;
+                    hitbit_leds_write(pattern);
                 }
             }
         }
+        else
+        {
+            // Timeout: rotate bits and show them
+            pattern = hitbit_rotate_left4(pattern);
+            hitbit_leds_write(pattern);
+        }
     }
 }
+
 
 
 // Task creation and initialization

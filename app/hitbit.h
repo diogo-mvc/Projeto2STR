@@ -6,35 +6,35 @@
 #include "task.h"
 
 /**
- * Notification bit used by the HitBit ISR -> task
+ * Notification bit used by the joystick ISR -> HitBit task
  */
 #define HITBIT_NOTIFY_BTN   (1UL << 0)
 
 /**
- * Initialize the Hit Bit game and attach the joystick interrupt.
- * Pass the HitBit task handle so the ISR can notify it.
+ * Attach joystick interrupt handlers and configure ISR-to-task notifications.
+ * The driver auto-detects button polarity (active-high/active-low) by sampling the idle level.
  */
-void hitbit_init(TaskHandle_t hitbitTaskHandle);
+void hitbit_attach(TaskHandle_t hitbitTaskHandle);
 
 /**
- * Detach interrupt (optional but useful if you want).
+ * Detach joystick interrupts (useful when HB is disabled).
  */
-void hitbit_deinit(void);
+void hitbit_detach(void);
 
 /**
- * Display the bit pattern on the 4 LEDs
- * Bit 0 -> LED1, Bit 1 -> LED2, Bit 2 -> LED3, Bit 3 -> LED4
+ * Write a 4-bit pattern to the 4 mbed LEDs.
+ * Bit0->LED1, Bit1->LED2, Bit2->LED3, Bit3->LED4
  */
-void hitbit_display_leds(uint8_t pattern);
+void hitbit_leds_write(uint8_t pattern);
 
 /**
- * Rotate the current 4-bit pattern by 1 position (circular).
- * Direction doesn’t matter for the spec; pick one and be consistent.
+ * Rotate a 4-bit pattern left (circular).
  */
-uint8_t hitbit_rotate_left(uint8_t pattern);
+uint8_t hitbit_rotate_left4(uint8_t pattern);
 
 /**
- * Toggle the LED4 bit (bit 3): if 1 -> 0, if 0 -> 1
+ * Toggle the LED4 bit (bit3).
+ * If LED4 was ON -> clear it, else -> add it.
  */
 uint8_t hitbit_toggle_led4(uint8_t pattern);
 
