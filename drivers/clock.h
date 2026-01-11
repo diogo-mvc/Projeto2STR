@@ -11,6 +11,7 @@
 extern "C" {
 #endif
 
+void alarmFunction( void );
 
 // Initialize the RTC interrupt to call the callback every second
 void clock_start(void);

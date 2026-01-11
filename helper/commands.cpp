@@ -1,4 +1,5 @@
 #include "commands.h"
+#include "clock.h"
 
 QueueHandle_t xQueue_send; /*sem isto aqui o extern dá erro*/
 
@@ -321,6 +322,16 @@ void cmd_sac(int argc, char **argv)
             alarm_time_minutes = intended_minutes;
             alarm_time_seconds = intended_seconds;
             printf("Alarm time set successfully!:%02d:%02d:%02d\n",alarm_time_hours,alarm_time_minutes,alarm_time_seconds);
+
+            struct tm next = RTC::getDefaultTM();
+            next.tm_hour = alarm_time_hours;
+            next.tm_min  = alarm_time_minutes;
+            next.tm_sec  = alarm_time_seconds;
+            time_t next_t = mktime(&next);
+            if (next_t <= current_time) { //
+                next.tm_mday += 1; //
+            }
+            RTC::alarm(&alarmFunction, next);
         }
     
     } else {
