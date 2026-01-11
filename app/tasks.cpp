@@ -92,7 +92,7 @@ void vAlarmTask(void *pvParameters) {
 
         if( ((int)current_time % pmon == 0 )||(pmon == 0) ){xTaskNotify(xSensorTaskHandle, 0x10, eSetBits);}
 
-        if (temp_alarm_flag || time_alarm_flag){
+        if ((temp_alarm_flag && AlarmTemp_enable) || (time_alarm_flag && AlarmClock_enable)){
             //play buzzer
             xTaskNotify(xBuzzerTaskHandle, BUZZER_ON, eSetBits);
             /*alarm stated now*/

@@ -106,11 +106,24 @@ void cmd_sd(int argc, char **argv)
             if (intended_day > max_day) {
                 printf("Invalid date! Day exceeds maximum for the month\n");
             } else {
+
                 current_time_tm.tm_mday = intended_day;
                 current_time_tm.tm_mon = intended_month - 1; // tm_mon is 0-11
                 current_time_tm.tm_year = intended_year - 1900; // tm_year is years since 1900
                 current_time = clock_tm_to_time(&current_time_tm);
+                set_time(current_time);
                 printf("Date set successfully!\n");
+
+                char buf[32];
+                snprintf(buf, sizeof(buf),
+                        "%02d/%02d/%04d %02d:%02d:%02d\n",
+                        current_time_tm.tm_mday,
+                        current_time_tm.tm_mon + 1,
+                        current_time_tm.tm_year + 1900,
+                        current_time_tm.tm_hour,
+                        current_time_tm.tm_min,
+                        current_time_tm.tm_sec);
+                printf("%s\n", buf);
             }
         }
     
@@ -160,7 +173,19 @@ void cmd_sc(int argc, char **argv)
             current_time_tm.tm_min = intended_minutes;
             current_time_tm.tm_sec = intended_seconds;
             current_time = clock_tm_to_time(&current_time_tm);
+            set_time(current_time);
+
             printf("Time set successfully!\n");
+            char buf[32];
+            snprintf(buf, sizeof(buf),
+                    "%02d/%02d/%04d %02d:%02d:%02d\n",
+                    current_time_tm.tm_mday,
+                    current_time_tm.tm_mon + 1,
+                    current_time_tm.tm_year + 1900,
+                    current_time_tm.tm_hour,
+                    current_time_tm.tm_min,
+                    current_time_tm.tm_sec);
+            printf("%s\n", buf);
         }
     
     } else {

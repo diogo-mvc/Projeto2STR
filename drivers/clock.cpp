@@ -24,11 +24,22 @@ void clock_user_callback(clock_user_callback_t cb) {
     user_callback = cb;
 }
 
+void alarmFunction( void )
+{
+    time_alarm_flag= true;
+}
+
 void clock_start(void) {
     set_time(1766361600);
     current_time_tm = RTC::getDefaultTM();
     RTC::attach(&clock_callback, RTC::Second);
     current_time = 1766361600;
+
+    tm t = RTC::getDefaultTM();
+    t.tm_sec = ALAS;
+    t.tm_min = ALAM;
+    t.tm_hour = ALAH;
+    RTC::alarm(&alarmFunction, t);
 }
 
 // Convert time_t to struct tm (local time)
