@@ -11,8 +11,10 @@
 #define HITBIT_NOTIFY_BTN   (1UL << 0)
 
 /**
- * Attach joystick interrupt handlers and configure ISR-to-task notifications.
- * The driver auto-detects button polarity (active-high/active-low) by sampling the idle level.
+ * Prepare HitBit input handling. This driver uses a polling-based approach
+ * (no hardware ISR) and will sample the joystick when the HitBit task is
+ * enabled. The driver auto-detects button polarity (active-high/active-low)
+ * by sampling the idle level.
  */
 void hitbit_attach(TaskHandle_t hitbitTaskHandle);
 
@@ -20,6 +22,7 @@ void hitbit_attach(TaskHandle_t hitbitTaskHandle);
  * Detach joystick interrupts (useful when HB is disabled).
  */
 void hitbit_detach(void);
+
 
 /**
  * Write a 4-bit pattern to the 4 mbed LEDs.

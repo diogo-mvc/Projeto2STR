@@ -23,7 +23,6 @@ AnalogIn pot2(p20);
 
 InterruptIn btnJoystick(p14);  // Joystick center button
 
-
 int main() 
 {
     pc.baud(115200);

@@ -9,8 +9,8 @@ typedef void (*clock_user_callback_t)(void);
 static clock_user_callback_t user_callback = NULL;
 
 static void clock_callback(void) {
-    //current_time = time(NULL);
-    current_time += 1;
+    current_time = time(NULL);
+    //current_time += 1;
     clock_updated = true;
     //printf("%s", ctime(&current_time)); /*printf bloqueia o I2C->mau debug*/
     /*

@@ -108,13 +108,6 @@ void vAlarmTask(void *pvParameters) {
             }
         }
 
-        /*
-        uint8_t msg;
-        if (xQueueReceive(xBuzzerQueue, &msg, portMAX_DELAY) == pdPASS) {
-            // Generate sound using current PWM settings
-            //buzzer_play();
-        }
-        */
         vTaskDelay(pdMS_TO_TICKS(100)); /*trying to give control to the OS but it is still a spinlock ='(*/
     }
 }
@@ -157,6 +150,8 @@ void vHitBitTask(void *Parameters)
 
     TickType_t lastPressTick = 0;
 
+
+
     for (;;)
     {
         // ---- Disabled state ----
@@ -186,7 +181,7 @@ void vHitBitTask(void *Parameters)
         {
             wasEnabled = true;
 
-            // Attach ISR notifications for this task
+            // Attach the HitBit input handler (polling-based).
             hitbit_attach(xTaskGetCurrentTaskHandle());
 
             // Initialize a non-zero pattern so something is visible immediately.
@@ -205,57 +200,62 @@ void vHitBitTask(void *Parameters)
             (void)xTaskNotifyWait(0x00, 0xFFFFFFFF, &dump, 0);
         }
 
-        // ---- Enabled gameplay ----
-        uint32_t notif = 0;
-        BaseType_t gotNotif = xTaskNotifyWait(
-            0x00,               // don't clear on entry
-            HITBIT_NOTIFY_BTN,  // clear this bit on exit
-            &notif,
-            rotation_period     // timeout = rotation tick
-        );
+        // ---- Enabled gameplay (poll-based button handling) ----
+        // We poll the button in task context to avoid ISR-based faults.
+        const TickType_t poll_period = pdMS_TO_TICKS(40);
+        TickType_t lastRotateTick = xTaskGetTickCount();
+        int pressedLevel = (btnJoystick.read() == 0) ? 1 : 0;
+        int lastBtnLevel = btnJoystick.read();
 
-        if (gotNotif == pdTRUE && (notif & HITBIT_NOTIFY_BTN))
-        {
-            // Debounce (ignore repeated edges close together)
+        for (;;) {
+            // If disabled during polling, break to outer loop to detach
+            if (!HitBit_enable) break;
+
             TickType_t now = xTaskGetTickCount();
-            if ((now - lastPressTick) >= debounce_ticks)
-            {
-                lastPressTick = now;
 
-                // "Hit" affects LED4 bit only (toggle bit3)
-                pattern = hitbit_toggle_led4(pattern);
-                hitbit_leds_write(pattern);
+            // Read button and detect new press edge
+            int level = btnJoystick.read();
+            if (level == pressedLevel && lastBtnLevel != pressedLevel) {
+                // Debounce (ignore repeated edges close together)
+                if ((now - lastPressTick) >= debounce_ticks) {
+                    lastPressTick = now;
 
-                // WIN: all bits cleared
-                if ((pattern & 0x0F) == 0x00)
-                {
-                    // Blink all 4 LEDs 3 times
-                    for (int i = 0; i < 3; i++)
-                    {
-                        // If user disables while blinking, abort quickly
-                        if (!HitBit_enable) break;
-
-                        hitbit_leds_write(0x0F);
-                        vTaskDelay(pdMS_TO_TICKS(200));
-                        hitbit_leds_write(0x00);
-                        vTaskDelay(pdMS_TO_TICKS(200));
-                    }
-
-                    // Reset the game after win
-                    pattern = 0x0F;
+                    // "Hit" affects LED4 bit only (toggle bit3)
+                    pattern = hitbit_toggle_led4(pattern);
                     hitbit_leds_write(pattern);
+
+                    // WIN: all bits cleared
+                    if ((pattern & 0x0F) == 0x00) {
+                        // Blink all 4 LEDs 3 times
+                        for (int i = 0; i < 3; i++) {
+                            // If user disables while blinking, abort quickly
+                            if (!HitBit_enable) break;
+
+                            hitbit_leds_write(0x0F);
+                            vTaskDelay(pdMS_TO_TICKS(200));
+                            hitbit_leds_write(0x00);
+                            vTaskDelay(pdMS_TO_TICKS(200));
+                        }
+
+                        // Reset the game after win
+                        pattern = 0x0F;
+                        hitbit_leds_write(pattern);
+                    }
                 }
             }
-        }
-        else
-        {
-            // Timeout: rotate bits and show them
-            pattern = hitbit_rotate_left4(pattern);
-            hitbit_leds_write(pattern);
+            lastBtnLevel = level;
+
+            // Rotate pattern at rotation_period intervals
+            if ((now - lastRotateTick) >= rotation_period) {
+                lastRotateTick = now;
+                pattern = hitbit_rotate_left4(pattern);
+                hitbit_leds_write(pattern);
+            }
+
+            vTaskDelay(poll_period);
         }
     }
 }
-
 
 
 // Task creation and initialization

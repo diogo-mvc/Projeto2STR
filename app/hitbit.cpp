@@ -9,30 +9,9 @@ static TaskHandle_t sHitBitTaskHandle = NULL;
 static int  sPressedLevel = 1;
 static bool sPressedLevelValid = false;
 
-static void hitbit_button_isr(void)
-{
-    if (sHitBitTaskHandle == NULL || !sPressedLevelValid) {
-        return;
-    }
-
-    // InterruptIn is also a DigitalIn, so read() is valid
-    const int level = btnJoystick.read();
-
-    // Only treat the interrupt as a "press" if pin is at the pressed level.
-    // (This avoids triggering on release when both edges are attached.)
-    if (level != sPressedLevel) {
-        return;
-    }
-
-    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-    xTaskNotifyFromISR(
-        sHitBitTaskHandle,
-        HITBIT_NOTIFY_BTN,
-        eSetBits,
-        &xHigherPriorityTaskWoken
-    );
-    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-}
+// NOTE: Using InterruptIn callbacks caused a mbed fault on this target.
+// To be robust we use a polling-based approach inside the HitBit task so
+// the button is handled entirely in task context (no ISRs). 
 
 void hitbit_attach(TaskHandle_t hitbitTaskHandle)
 {
@@ -44,15 +23,15 @@ void hitbit_attach(TaskHandle_t hitbitTaskHandle)
     sPressedLevel = (idle == 0) ? 1 : 0;
     sPressedLevelValid = true;
 
-    // Attach both edges; ISR filters by pressed level
-    btnJoystick.rise(&hitbit_button_isr);
-    btnJoystick.fall(&hitbit_button_isr);
+    // No hardware interrupts when using the polling approach. The HitBit
+    // task will monitor the pin in task context and handle presses; this
+    // avoids any ISR-related platform faults.
 }
 
 void hitbit_detach(void)
 {
-    btnJoystick.rise(NULL);
-    btnJoystick.fall(NULL);
+    // No InterruptIn handlers are attached when using the polling approach.
+    // Just clear state so the HitBit task will stop monitoring.
     sHitBitTaskHandle = NULL;
     sPressedLevelValid = false;
 }
