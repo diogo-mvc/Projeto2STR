@@ -2,12 +2,24 @@
 #define HITBIT_H
 
 #include <stdint.h>
+#include "FreeRTOS.h"
+#include "task.h"
 
 /**
- * Initialize the Hit Bit game
- * Sets up the button interrupt handler
+ * Notification bit used by the HitBit ISR -> task
  */
-void hitbit_init(void);
+#define HITBIT_NOTIFY_BTN   (1UL << 0)
+
+/**
+ * Initialize the Hit Bit game and attach the joystick interrupt.
+ * Pass the HitBit task handle so the ISR can notify it.
+ */
+void hitbit_init(TaskHandle_t hitbitTaskHandle);
+
+/**
+ * Detach interrupt (optional but useful if you want).
+ */
+void hitbit_deinit(void);
 
 /**
  * Display the bit pattern on the 4 LEDs
@@ -16,23 +28,14 @@ void hitbit_init(void);
 void hitbit_display_leds(uint8_t pattern);
 
 /**
- * Display only the rotating position (cursor)
- * Used during game play to show which LED is the current target
+ * Rotate the current 4-bit pattern by 1 position (circular).
+ * Direction doesn’t matter for the spec; pick one and be consistent.
  */
-void hitbit_display_rotating(uint8_t pos);
+uint8_t hitbit_rotate_left(uint8_t pattern);
 
 /**
- * Blink all 4 LEDs 3 times to signal WIN
+ * Toggle the LED4 bit (bit 3): if 1 -> 0, if 0 -> 1
  */
-void hitbit_blink_leds_win(void);
-
-
-//Get the current rotating LED position
-
-uint8_t hitbit_get_rotating_pos(void);
-
-//Set the current rotating LED position
-void hitbit_set_rotating_pos(uint8_t pos);
+uint8_t hitbit_toggle_led4(uint8_t pattern);
 
 #endif // HITBIT_H
-
